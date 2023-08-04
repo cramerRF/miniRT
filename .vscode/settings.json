@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "libft.h": "c",
+        "struct.h": "c",
+        "minirt.h": "c"
+    }
+}
