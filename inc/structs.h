@@ -22,6 +22,7 @@ typedef struct s_obj_properties
     cType       color;
     nType       transparency;
     nType       reflexction;
+    nType       density;
 }   t_obj_properties;
 
 typedef struct s_td_triangle
@@ -43,10 +44,18 @@ typedef struct s_plane
 {
     t_td_point          center;
     t_td_point          normal;
-    nType               height;
-    nType               width;
     t_obj_properties    *prop;
 } t_plane;
+
+typedef struct s_box
+{
+    t_td_point          center;
+    t_td_point          normal;
+    nType               height;
+    nType               width;
+    nType               length;
+    t_obj_properties    *prop;
+} t_box;
 
 typedef struct s_cilinder
 {
@@ -92,7 +101,7 @@ typedef struct s_light
 
 typedef struct s_camera
 {
-    t_td_point  center;
+    t_td_point  vertex;
     t_td_point  normal;
     nType       fov;
 }   t_camera;
@@ -101,6 +110,7 @@ typedef struct s_camera
 
 typedef struct s_tuple
 {
+    char    fixed;
     char    *key;
     void    *content;
 }   t_tuple;
