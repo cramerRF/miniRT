@@ -3,7 +3,7 @@ SRCLST	= ft_lstadd_back_bonus.c ft_lstadd_front_bonus.c ft_lstclear_bonus.c ft_l
 OBJS	= ${SRCS:.c=.o}
 OBJSLST	= ${SRCLST:.c=.o}
 CC	= cc
-CFLAGS	= -Wall -Wextra -Werror #-O0 -fsanitize=address,undefined 
+CFLAGS	= -Wall -Wextra -Werror -g3
 AR	= ar rc
 NAME	= libft.a
 RM	= rm -f

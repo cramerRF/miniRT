@@ -25,6 +25,9 @@ typedef struct s_obj_properties
     nType       density;
 }   t_obj_properties;
 
+# define OBJ_NULL 0
+# define OBJ_TRI 1
+
 typedef struct s_td_triangle
 {
     t_td_point          x;
@@ -33,6 +36,8 @@ typedef struct s_td_triangle
     t_obj_properties    *prop;
 }   t_td_triangle;
 
+# define OBJ_SPH 2
+
 typedef struct s_sphere
 {
     t_td_point          center;
@@ -40,12 +45,16 @@ typedef struct s_sphere
     t_obj_properties    *prop;
 } t_sphere;
 
+# define OBJ_PLA 3
+
 typedef struct s_plane
 {
     t_td_point          center;
     t_td_point          normal;
     t_obj_properties    *prop;
 } t_plane;
+
+# define OBJ_BOX 4
 
 typedef struct s_box
 {
@@ -57,6 +66,8 @@ typedef struct s_box
     t_obj_properties    *prop;
 } t_box;
 
+# define OBJ_CIL 5
+
 typedef struct s_cilinder
 {
     t_td_point          center;
@@ -65,6 +76,8 @@ typedef struct s_cilinder
     nType               width;
     t_obj_properties    *prop;
 } t_cilinder;
+
+# define OBJ_CON 6
 
 typedef struct s_cone
 {
@@ -75,20 +88,17 @@ typedef struct s_cone
     t_obj_properties    *prop;
 } t_cone;
 
-typedef struct s_parabola
-{
-    t_cone              cone;
-    t_plane             plane;
-    t_obj_properties    *prop;
-} t_parabola;
-
 //Lights
+
+# define OBJ_AL 7
 
 typedef struct s_ambient_light
 {
     cType   color;
     nType   ratio;
 } t_ambient_light;
+
+# define OBJ_LI 8
 
 typedef struct s_light
 {
@@ -98,6 +108,9 @@ typedef struct s_light
 } t_light;
 
 //Camera
+
+# define OBJ_C 9
+# define OBJ_N 10
 
 typedef struct s_camera
 {
