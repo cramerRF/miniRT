@@ -124,6 +124,7 @@ typedef struct s_camera
 typedef struct s_tuple
 {
     char    fixed;
+    int     type;
     char    *key;
     void    *content;
 }   t_tuple;

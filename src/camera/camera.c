@@ -1,8 +1,9 @@
 #include "../../inc/miniRT.h"
 
-t_camera    *create_camera()
+t_tuple    *add_camera(void)
 {
     t_camera    *cam;
+    t_tuple     *obj;
 
     cam = malloc(sizeof(t_camera));
     if (!cam)
@@ -10,9 +11,26 @@ t_camera    *create_camera()
     cam->fov = 90;
     cam->normal = (t_td_point) {1, 0, 0};
     cam->vertex = (t_td_point) {0, 0, 0};
-    return (cam);
+    obj = malloc(sizeof(t_tuple));
+    if (!obj)
+        return (free(cam), NULL);
+    obj->content = cam;
+    obj->type = OBJ_C;
+    return (obj);
 }
 
+void    print_camera(t_tuple *obj)
+{
+    t_camera *cam;
+
+    cam = obj->content;
+    printf("Camera: ->%s<- addr_obj %p addr_content %p cam %p\n", obj->key, obj, obj->content, cam);
+    printf("Vertex: %0.3f %0.3f %0.3f\n", cam->vertex.x, cam->vertex.y, cam->vertex.z);
+    printf("Normal: %0.3f %0.3f %0.3f\n", cam->normal.x, cam->normal.y, cam->normal.z);
+    printf("Fov: %0.3f\n\n", cam->fov);
+}
+
+/*
 void    edit_camera(t_camera *cam)
 {
     char    *line;
@@ -20,9 +38,7 @@ void    edit_camera(t_camera *cam)
     while (1)
     {
         printf("Editing camera %p\nfov, normal, vertex, exit\n", cam);
-        line = get_next_line(0);
-        if (line)
-            line[ft_strlen(line) - 1] = 0;
+        line = get_next_line_nl(0, 0);
         if (!ft_strncmp(line, "fov", 4))
             cam->fov = get_number("fov", 0, 180);
         else if (!ft_strncmp(line, "normal", 7))
@@ -35,4 +51,12 @@ void    edit_camera(t_camera *cam)
     }
     if (line)
         free(line);
+}
+*/
+
+void    free_camera(t_tuple *obj)
+{
+    free(obj->key);
+    free(obj->content);
+    free(obj);
 }

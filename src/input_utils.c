@@ -10,15 +10,15 @@ t_td_point  get_point(char *name, nType norme)
     if (norme)
         printf("Will be normalize to %0.2f\n", (float) norme);
     printf("Input x:\t");
-    line = get_next_line(0);
+    line = get_next_line_nl(0, 0);
     ret.x = ft_atoi(line);
     free(line);
     printf("Input y:\t");
-    line = get_next_line(0);
+    line = get_next_line_nl(0, 0);
     ret.y = ft_atoi(line);
     free(line);
     printf("Input z:\t");
-    line = get_next_line(0);
+    line = get_next_line_nl(0, 0);
     ret.z = ft_atoi(line);
     free(line);
     if (!ret.x && !ret.y && !ret.z)
@@ -41,7 +41,7 @@ nType   get_number(char *name, nType _min, nType _max)
     if (_min >= _max)
         return (printf("Error: get_number _min > _max\n"), 0);
     printf("Input a number for -%s- between %0.2f and %0.2f:\n", name, (float) _min, (float) _max);
-    line = get_next_line(0);
+    line = get_next_line_nl(0, 0);
     ret = ft_atoi(line);
     free(line);
     if (_min > ret || _max < ret)

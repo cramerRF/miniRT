@@ -1,9 +1,9 @@
 SRC		= ./src/main.c \
 		./src/input_utils.c \
+		./src/gnl_utils.c \
 		./src/file_parser.c \
 		./src/menu/menu.c \
 		./src/menu/add.c \
-		./src/menu/clean.c \
 		./src/menu/delete.c \
 		./src/menu/edit.c \
 		./src/menu/error.c \

@@ -33,7 +33,7 @@ static int		read_rt_file(t_rt *rt)
 	fd = open(rt->file, O_RDONLY, 0600);
 	if (fd == -1)
 		return (printf("Can not open the file '%s'\n", rt->file), 1);
-	line = get_next_line(fd);
+	line = get_next_line_nl(fd, 0);
 	while (line)
 	{
 		i++;
@@ -43,8 +43,8 @@ static int		read_rt_file(t_rt *rt)
 		else if (!parser[type](rt, line))
 			return (free(line), printf("Error in line %d ->%s<-", i, line), 1);
 		free(line);
-		line = get_next_line(fd);
-	}	
+		line = get_next_line_nl(fd, 0);
+	}
 	return (0);
 }
 
