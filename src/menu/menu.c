@@ -37,7 +37,7 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 	exec[EX_EXIT] = rt_exit;
 	exec[EX_HELP] = NULL;
 	exec[EX_LIST] = rt_list;
-	exec[EX_SAVE] = NULL;
+	exec[EX_SAVE] = rt_save;
 	exec[EX_LOAD] = NULL;
 }
 

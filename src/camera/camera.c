@@ -68,9 +68,20 @@ void    free_camera(t_tuple *obj)
     free(obj);
 }
 
+//obj->type obj->key cam->vertex,x3 cam->normal,x3 cam->fov
+
 void    write_camera(t_tuple *obj)
 {
+    int fd;
+
+    fd = *((int *) memory(MEM_READ, NULL));
+    write(fd, "asdasdhola\n", 6);
+    ft_putnbr_fd(fd, fd);
     obj++;
 }
 
 void    read_camera(t_tuple *obj)
+{
+
+    obj++;
+}

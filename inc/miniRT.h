@@ -48,6 +48,8 @@ int         rt_list(t_rt *rt);
 //edit
 int         rt_edit(t_rt *rt);
 void        *memory(int code, void *arg);
+//save
+int         rt_save(t_rt *rt);
 /* src/objs */
 
 //camera

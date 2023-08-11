@@ -49,7 +49,7 @@ int rt_save(t_rt *rt)
     char    *file;
     int     fd;
 
-    printf("rt_save %p file: %s\nSure you want to save it here? (Y/N) Y", rt, rt->file);
+    printf("rt_save %p file: %s\nSure you want to save it here? (Y/N) Y\n", rt, rt->file);
     file = NULL;
     input = get_next_line_nl(0, 0);
     if (!ft_strncmp(input, "N", 2) || !ft_strncmp(input, "n", 2))
@@ -59,7 +59,7 @@ int rt_save(t_rt *rt)
     }
     if (!file)
         file = rt->file;
-    fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+    fd = open(file, O_CREAT | O_TRUNC | O_RDWR, 0644);
     if (fd < 0)
         return (printf("Error opening file for writing\n"), (file == rt->file) ? NULL : free(file), 1);
     rt_write(fd, rt);
