@@ -16,6 +16,10 @@ int		get_cmd(char *line)
 		return (EX_HELP);
 	else if (!ft_strncmp(line, "list", 5) || !ft_strncmp(line, "ls", 3))
 		return (EX_LIST);
+	else if (!ft_strncmp(line, "save", 5) || !ft_strncmp(line, "s", 2))
+		return (EX_SAVE);
+	else if (!ft_strncmp(line, "load", 5))
+		return (EX_LOAD);
 	return (0);
 }
 
@@ -28,11 +32,13 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 {
 	exec[EX_ERROR] = NULL;
 	exec[EX_ADD] = rt_add;
-	exec[EX_EDIT] = NULL;
+	exec[EX_EDIT] = rt_edit;
 	exec[EX_DELETE] = NULL;
 	exec[EX_EXIT] = rt_exit;
-	exec[EX_LIST] = rt_list;
 	exec[EX_HELP] = NULL;
+	exec[EX_LIST] = rt_list;
+	exec[EX_SAVE] = NULL;
+	exec[EX_LOAD] = NULL;
 }
 
 void menu_start(t_rt * rt)

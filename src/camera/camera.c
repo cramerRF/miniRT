@@ -1,5 +1,6 @@
 #include "../../inc/miniRT.h"
 
+
 t_tuple    *add_camera(void)
 {
     t_camera    *cam;
@@ -16,6 +17,9 @@ t_tuple    *add_camera(void)
         return (free(cam), NULL);
     obj->content = cam;
     obj->type = OBJ_C;
+    obj->key = NULL;
+    obj->fixed = 0;
+    printf("Camera: ->%s<- addr_obj %p addr_content %p cam %p\n", obj->key, obj, obj->content, cam);
     return (obj);
 }
 
@@ -30,11 +34,15 @@ void    print_camera(t_tuple *obj)
     printf("Fov: %0.3f\n\n", cam->fov);
 }
 
-/*
-void    edit_camera(t_camera *cam)
+void    edit_camera(t_tuple *obj)
 {
-    char    *line;
+    t_camera    *cam;
+    char        *line;
 
+    cam = obj->content;
+    print_camera(obj);
+    if (obj->fixed)
+        printf ("This obj is fixed\n");
     while (1)
     {
         printf("Editing camera %p\nfov, normal, vertex, exit\n", cam);
@@ -52,7 +60,6 @@ void    edit_camera(t_camera *cam)
     if (line)
         free(line);
 }
-*/
 
 void    free_camera(t_tuple *obj)
 {
@@ -60,3 +67,10 @@ void    free_camera(t_tuple *obj)
     free(obj->content);
     free(obj);
 }
+
+void    write_camera(t_tuple *obj)
+{
+    obj++;
+}
+
+void    read_camera(t_tuple *obj)

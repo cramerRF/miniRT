@@ -47,7 +47,6 @@ int 		rt_add(t_rt *rt)
     t_tuple     *nuw;
     t_list      *lst;
 
-    printf("add_parser %p\n", add_parser[EX_ADD]);
     if (!add_parser[EX_ADD])
         set_up_add_parser(add_parser);
     printf("Select an object:\n\t-camera\n\n\t-light\n\t-ambinet_light\n\n\t-triangle\n\t-plane\n\t-sphere\n\n");
@@ -70,9 +69,9 @@ int 		rt_add(t_rt *rt)
         ft_lstadd_back(&rt->cameras, lst);
     else if (nuw->type == OBJ_LI || nuw->type == OBJ_AL)
         ft_lstadd_back(&rt->lights, lst);
-    else if (nuw->type == OBJ_NULL)
+    else if (nuw->type != OBJ_NULL)
         ft_lstadd_back(&rt->objs, lst);
     else
         return(free_objs(nuw), free(lst), printf("Unknown obj type\n"), 1);
     return (0);
-}   
+} 

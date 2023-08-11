@@ -45,6 +45,7 @@ static int		read_rt_file(t_rt *rt)
 		free(line);
 		line = get_next_line_nl(fd, 0);
 	}
+	close(fd);
 	return (0);
 }
 

@@ -9,6 +9,8 @@ SRC		= ./src/main.c \
 		./src/menu/error.c \
 		./src/menu/exit.c \
 		./src/menu/list.c \
+		./src/menu/save.c \
+		./src/menu/load.c \
 		./src/camera/camera.c \
 		./src/light/light.c \
 		./src/light/ambient_light.c \

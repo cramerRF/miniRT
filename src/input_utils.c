@@ -44,7 +44,7 @@ nType   get_number(char *name, nType _min, nType _max)
     line = get_next_line_nl(0, 0);
     ret = ft_atoi(line);
     free(line);
-    if (_min > ret || _max < ret)
+    if (_min >= ret || _max <= ret)
         ret = get_number(name, _min, _max);
     return (ret);
 }

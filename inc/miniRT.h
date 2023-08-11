@@ -7,8 +7,14 @@
 # define EX_DELETE  3
 # define EX_EXIT    4
 # define EX_HELP    5
-# define EX_LIST    7
-# define EX_N       8
+# define EX_LIST    6
+# define EX_SAVE    7
+# define EX_LOAD    8
+# define EX_N       9
+
+# define MEM_CLEAR  0
+# define MEM_WRITE  1
+# define MEM_READ   2
 
 # include "../lib/libft/libft.h"
 # include "../lib/gnl/get_next_line_bonus.h"
@@ -39,14 +45,17 @@ int 		rt_exit(t_rt *rt);
 int 		rt_add(t_rt *rt);
 //list
 int         rt_list(t_rt *rt);
-
+//edit
+int         rt_edit(t_rt *rt);
+void        *memory(int code, void *arg);
 /* src/objs */
 
 //camera
 t_tuple     *add_camera(void);
 void        print_camera(t_tuple *obj);
+void        edit_camera(t_tuple *obj);
 void        free_camera(t_tuple *cam);
-
+void        write_camera(t_tuple *obj);
 /* src/light */
 
 #endif
