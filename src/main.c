@@ -9,7 +9,7 @@ int main(int argc, char **args)
 {
     t_rt    *rt;
 
-    if (argc == 2)
+    if (argc == 2 && !ft_strncmp(".rt", args[1] + (int) fmin(ft_strlen(args[1]), (unsigned) ft_strlen(args[1]) - 3), 4))
         rt = open_rt_file(args[1]);
     else
         return (help_use(), 1);
