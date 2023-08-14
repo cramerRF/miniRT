@@ -40,7 +40,7 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 	exec[EX_HELP] = rt_help;
 	exec[EX_LIST] = rt_list;
 	exec[EX_SAVE] = rt_save;
-	exec[EX_LOAD] = NULL;
+	exec[EX_LOAD] = rt_load;
 	exec[EX_RENDER] = NULL;
 }
 
@@ -54,7 +54,7 @@ void menu_start(t_rt * rt)
     	set_up_exec(exec_cmd);
     while (1)
     {
-		printf(COLOR_CLEAN "\x1B[H\n******************************************\n\x1B[H");
+		printf(COLOR_CLEAN "******************************************\n");
 		fflush(NULL);
 	    line = get_next_line_nl(0, 0);
 		if (!line)
@@ -67,5 +67,7 @@ void menu_start(t_rt * rt)
 			printf("Not implemented %d\n", cmd);
 		else if (exec_cmd[cmd](rt))
 			printf("Error\n");
+		if (cmd == EX_EXIT)
+			break ;
     }
 }

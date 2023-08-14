@@ -46,6 +46,7 @@ int 		rt_add(t_rt *rt)
     static t_tuple     *(*add_parser[EX_N])(void);
     t_tuple     *nuw;
     t_list      *lst;
+    int         flag[1];
 
     if (!add_parser[EX_ADD])
         set_up_add_parser(add_parser);
@@ -62,7 +63,8 @@ int 		rt_add(t_rt *rt)
     line = get_next_line_nl(0, 0);
     //Check fixed
     nuw->key = line;
-    if (rt_check_fixed_identifier(rt, nuw->key, nuw->type))
+    *flag = rt_check_fixed_identifier(rt, nuw->key, nuw->type);
+    if ((nuw->fixed && TestBit(flag, CHECK_EXISTS_TYPE)) || TestBit(flag, CHECK_FIX) || TestBit(flag, CHECK_KEY))
         return(free_objs(nuw), printf("Error concurrency\n"), 1);
     lst = ft_lstnew(nuw);
     if (!lst)

@@ -34,6 +34,5 @@ int		rt_exit(t_rt *rt)
     ft_lstclear(&rt->objs, free_objs);
 	free(rt->file);
 	free(rt);
-	exit(0);
 	return (0);
 }

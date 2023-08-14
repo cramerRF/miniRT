@@ -68,6 +68,7 @@ void        menu_start(t_rt * rt);
 //exit
 void        free_objs(void *obj);
 int 		rt_exit(t_rt *rt);
+t_rt        **get_rt_addr(t_rt **nuw);
 //add
 int 		rt_add(t_rt *rt);
 //list
@@ -75,9 +76,11 @@ int         rt_list(t_rt *rt);
 //edit
 int         rt_edit(t_rt *rt);
 void        *memory(int code, void *arg);
-int    rt_check_fixed_identifier(t_rt *rt, char *key, int type);
+int         rt_check_fixed_identifier(t_rt *rt, char *key, int type);
 //save
 int         rt_save(t_rt *rt);
+//laod
+int         rt_load(t_rt *rt);
 //help
 int 		rt_help(t_rt *rt);
 
