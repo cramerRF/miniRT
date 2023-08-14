@@ -69,6 +69,8 @@ void        menu_start(t_rt * rt);
 void        free_objs(void *obj);
 int 		rt_exit(t_rt *rt);
 t_rt        **get_rt_addr(t_rt **nuw);
+void    search_obj_key(t_list *lst, t_tuple **ret, char *key);
+
 //add
 int 		rt_add(t_rt *rt);
 //list
@@ -83,6 +85,8 @@ int         rt_save(t_rt *rt);
 int         rt_load(t_rt *rt);
 //help
 int 		rt_help(t_rt *rt);
+//delete
+int 		rt_delete(t_rt *rt);
 
 /* src/objs */
 

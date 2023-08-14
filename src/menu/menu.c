@@ -35,7 +35,7 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 	exec[EX_ERROR] = NULL;
 	exec[EX_ADD] = rt_add;
 	exec[EX_EDIT] = rt_edit;
-	exec[EX_DELETE] = NULL;
+	exec[EX_DELETE] = rt_delete;
 	exec[EX_EXIT] = rt_exit;
 	exec[EX_HELP] = rt_help;
 	exec[EX_LIST] = rt_list;
