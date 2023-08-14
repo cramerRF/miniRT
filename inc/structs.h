@@ -119,6 +119,18 @@ typedef struct s_camera
     nType       fov;
 }   t_camera;
 
+//Render
+
+typedef struct s_render
+{
+    unsigned height;
+    unsigned width;
+    char     preview;
+    unsigned refresh_ms;
+    char     *file_output;
+    char     *file_input;
+}
+
 //List container
 
 typedef struct s_tuple
