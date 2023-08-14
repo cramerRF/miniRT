@@ -52,7 +52,7 @@ void    edit_light(t_tuple *obj)
         if (!ft_strncmp(line, "ratio", 4))
             li->ratio = get_number("ratio", 0, 1);
         else if (!ft_strncmp(line, "center", 7))
-            li->center = get_point("center", 1);
+            li->center = get_point("center", 0);
         else if (!ft_strncmp(line, "color", 7))
             get_color("color", li->color);
         else if (!ft_strncmp(line, "exit", 5))

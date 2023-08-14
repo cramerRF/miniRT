@@ -16,8 +16,9 @@ SRC		= ./src/main.c \
 		./src/light/light.c \
 		./src/light/ambient_light.c \
 		./src/objs/plane.c \
-		./src/objs/sphere.c \
 		./src/objs/triangle.c
+
+#		./src/objs/sphere.c \
 
 HEAD		= ./inc/miniRT.h \
 		  ./inc/structs.h
