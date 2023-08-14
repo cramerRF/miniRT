@@ -33,15 +33,9 @@ void *memory(int code, void *arg)
     static void *mem;
 
     if (code == MEM_CLEAR)
-    {
         mem = NULL;
-        return (mem = NULL, NULL);
-    }
     else if (code == MEM_WRITE)
-    {
         mem = arg;
-        return (NULL);
-    }
     else if (code == MEM_READ)
         return (mem);
     return (NULL);
@@ -54,22 +48,52 @@ void    obj_mem_search(void *arg)
     memory(MEM_WRITE, arg);
 }
 
+void    search_obj_key(t_list *lst, t_tuple **ret, char *key)
+{
+    t_tuple *obj;
+
+    if (*ret)
+        return ;
+    while (lst)
+    {
+        obj = lst->content;
+        if (!ft_strncmp(obj->key, key, ft_strlen(key)))
+        {
+            *ret = obj;
+            break ;
+        }
+        lst = lst->next;
+    }
+}
+
 int rt_edit(t_rt *rt)
 {
     char    *line;
+    t_tuple *obj;
 
     rt_list(rt);
     printf("rt_edit %p\nGive the object identifier\n", rt);
     line = get_next_line_nl(0, 0);
+    if (!line)
+        return (printf("Null line\n"), 1);
+    /*
     memory(MEM_CLEAR, NULL);
     memory(MEM_WRITE, line);
     ft_lstiter(rt->cameras, obj_mem_search);
     ft_lstiter(rt->lights, obj_mem_search);
     ft_lstiter(rt->objs, obj_mem_search);
-    if (line == (char *) memory(MEM_READ, NULL))
-        return (free(line), memory(MEM_CLEAR, NULL), 1);
+    printf("->>>>>>>>> %s %s\n", line, (char *) memory(MEM_READ, NULL));
+    if (!ft_strncmp(line, ((t_tuple *) memory(MEM_READ, NULL))->key, ft_strlen(((t_tuple *) memory(MEM_READ, NULL))->key)))
+        return (printf("Not found\n"), free(line), memory(MEM_CLEAR, NULL), 1);
     edit_obj(memory(MEM_READ, NULL));
     memory(MEM_CLEAR, NULL);
+    */
+    obj = NULL;
+    search_obj_key(rt->cameras, &obj, line);
+    search_obj_key(rt->lights, &obj, line);
+    search_obj_key(rt->objs, &obj, line);
+    if (obj)
+        edit_obj(obj);
     free(line);
     return (0);
 }

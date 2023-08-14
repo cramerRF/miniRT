@@ -34,11 +34,11 @@ void    rt_write(int fd, t_rt *rt)
 {    
     memory(MEM_CLEAR, NULL);
     memory(MEM_WRITE, &fd);
-    write(fd, "#cameras\n", 10);
+    dprintf(fd, "#cameras\n");
     ft_lstiter(rt->cameras, save_objs);
-    write(fd, "#lights\n", 9);
+    dprintf(fd, "#lights\n");
     ft_lstiter(rt->lights, save_objs);
-    write(fd, "#objs\n", 7);
+    dprintf(fd, "#objs\n");
     ft_lstiter(rt->objs, save_objs);
     memory(MEM_CLEAR, NULL);
 }
@@ -52,11 +52,13 @@ int rt_save(t_rt *rt)
     printf("rt_save %p file: %s\nSure you want to save it here? (Y/N) Y\n", rt, rt->file);
     file = NULL;
     input = get_next_line_nl(0, 0);
-    if (!ft_strncmp(input, "N", 2) || !ft_strncmp(input, "n", 2))
+    if (input && (!ft_strncmp(input, "N", 2) || !ft_strncmp(input, "n", 2)))
     {
         printf("Input file name:\n");
         file = get_next_line_nl(0, 0);
     }
+    if (input)
+        free(input);
     if (!file)
         file = rt->file;
     fd = open(file, O_CREAT | O_TRUNC | O_RDWR, 0644);

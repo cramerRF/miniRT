@@ -28,10 +28,11 @@ void    print_camera(t_tuple *obj)
     t_camera *cam;
 
     cam = obj->content;
-    printf("Camera: ->%s<- addr_obj %p addr_content %p cam %p\n", obj->key, obj, obj->content, cam);
-    printf("Vertex: %0.3f %0.3f %0.3f\n", cam->vertex.x, cam->vertex.y, cam->vertex.z);
-    printf("Normal: %0.3f %0.3f %0.3f\n", cam->normal.x, cam->normal.y, cam->normal.z);
-    printf("Fov: %0.3f\n\n", cam->fov);
+    printf("Camera:\t->%s<- addr_obj %p addr_content %p cam %p\n", obj->key, obj, obj->content, cam);
+    printf("Vertex:\t%0.3f %0.3f %0.3f\n", cam->vertex.x, cam->vertex.y, cam->vertex.z);
+    printf("Normal:\t%0.3f %0.3f %0.3f\n", cam->normal.x, cam->normal.y, cam->normal.z);
+    printf("Fov:\t%0.3f\n", cam->fov);
+    printf("Fixed:\t%d\n\n", obj->fixed);
 }
 
 void    edit_camera(t_tuple *obj)
@@ -63,25 +64,75 @@ void    edit_camera(t_tuple *obj)
 
 void    free_camera(t_tuple *obj)
 {
-    free(obj->key);
-    free(obj->content);
-    free(obj);
+    if (obj)
+    {
+        if (obj->content)
+            free(obj->content);
+        if (obj->key)
+            free(obj->key);
+        free(obj);
+    }
 }
 
 //obj->type obj->key cam->vertex,x3 cam->normal,x3 cam->fov
+//0         1        2              3              4
 
 void    write_camera(t_tuple *obj)
 {
-    int fd;
+    int         fd;
+    t_camera    *cam;
 
+    cam = obj->content;
     fd = *((int *) memory(MEM_READ, NULL));
-    write(fd, "asdasdhola\n", 6);
-    ft_putnbr_fd(fd, fd);
-    obj++;
+    dprintf(fd, "C %s %f,%f,%f %f,%f,%f %f\n", obj->key, cam->vertex.x, cam->vertex.y, cam->vertex.z, cam->normal.x, cam->normal.y, cam->normal.z, cam->fov);
 }
 
-void    read_camera(t_tuple *obj)
+t_tuple     *malloc_camera_obj(void)
 {
+    t_camera    *cam;
+    t_tuple     *obj;
 
-    obj++;
+    cam = malloc(sizeof(t_camera));
+    if (!cam)
+        return (printf("Error mallocing cam\n"), NULL);
+    obj = malloc(sizeof(t_tuple));
+    if (!obj)
+        return (printf("Error mallocing object\n"), free(cam), NULL);
+    ft_bzero(cam, sizeof(t_camera));
+    ft_bzero(obj, sizeof(t_tuple));
+    obj->type = OBJ_C;
+    obj->content = cam;
+    obj->key = NULL;
+    obj->fixed = 0;
+    return (obj);
+}
+
+t_tuple    *read_camera(char *line)
+{
+    t_tuple    *obj;
+    int         len;
+    char        **split;
+
+    if (!line || (ft_strncmp(line, "C", 1) && ft_strncmp(line, "c", 1)))
+        return (printf("Error: read_camera with line that isnt a camera\n"), NULL);
+    split = ft_split(line, ' ');
+    if (!split)
+        return (printf("Error: split failed\n"), NULL);
+    obj = malloc_camera_obj();
+    if (!obj)
+        return (printf("Error: malloc obj\n"), ft_free_split(split), NULL);
+    len = 0;
+    while (split[len])
+        len++;
+    if (len != 5)
+        return (printf("Error: split size\n"), ft_free_split(split), free_camera(obj), NULL);
+    obj->key = ft_strdup(split[1]);
+    if (line_to_point(split[3], &((t_camera *) obj->content)->normal))
+        return (printf("Error: normal parsing error\n"), ft_free_split(split), free_camera(obj), NULL);
+    if (line_to_point(split[2], &((t_camera *) obj->content)->vertex))
+        return (printf("Error: vertex parsing error\n"), ft_free_split(split), free_camera(obj), NULL);
+    if (atof(split[4]) < 0 || atof(split[4]) > 180)
+        return (printf("Error: fov parsing error\n"), ft_free_split(split), free_camera(obj), NULL);
+    ((t_camera *) obj->content)->fov = atof(split[4]);
+    return (ft_free_split(split), obj);
 }

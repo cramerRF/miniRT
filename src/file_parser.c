@@ -2,11 +2,15 @@
 
 static int		get_obj_type(char *line)
 {
-	line++;
+	printf("%s\n", line);
+	if (!line)
+		return (0);
+	else if (!ft_strncmp(line, "C ", 2) || !ft_strncmp(line, "c ", 2))
+		return (OBJ_C);
 	return (0);
 }
 
-static void	setup_parser(int 	(*parser[OBJ_N])(t_rt *rt, char *line))
+static void	setup_parser(t_tuple 	*(*parser[OBJ_N])(char *))
 {
 	parser[OBJ_NULL] = NULL;
 	parser[OBJ_TRI] = NULL;
@@ -17,31 +21,55 @@ static void	setup_parser(int 	(*parser[OBJ_N])(t_rt *rt, char *line))
 	parser[OBJ_CON] = NULL;
 	parser[OBJ_AL] = NULL;
 	parser[OBJ_LI] = NULL;
-	parser[OBJ_C] = NULL;
+	parser[OBJ_C] = read_camera;
 }
 
 static int		read_rt_file(t_rt *rt)
 {
 	int		fd;
-	int		i;
 	int		type;
 	char	*line;
-	int 	(*parser[OBJ_N])(t_rt *rt, char *line);
+	static t_tuple 	*(*parser[OBJ_N])(char *line);
+	t_tuple		*obj;
+	t_list		*lst;
 
-	i = 0;
-	setup_parser(parser);
-	fd = open(rt->file, O_RDONLY, 0600);
+	if (!parser[OBJ_C])
+		setup_parser(parser);
+	fd = open(rt->file, O_RDONLY, 0644);
 	if (fd == -1)
 		return (printf("Can not open the file '%s'\n", rt->file), 1);
 	line = get_next_line_nl(fd, 0);
 	while (line)
 	{
-		i++;
+		if (line[0] == '#')
+		{
+			free(line);
+			line = get_next_line_nl(fd, 0);
+			continue ;
+		}
 		type = get_obj_type(line);
 		if (!parser[type])
 			printf("Type not implemeted\n");
-		else if (!parser[type](rt, line))
-			return (free(line), printf("Error in line %d ->%s<-", i, line), 1);
+		else
+		{
+			obj = parser[type](line);
+			if (obj)
+			{
+				lst = ft_lstnew(obj);
+    			if (!lst)
+    			    return(free_objs(obj), printf("Error creating list\n"), 1);
+    			if (obj->type == OBJ_C)
+    			    ft_lstadd_back(&rt->cameras, lst);
+    			else if (obj->type == OBJ_LI || obj->type == OBJ_AL)
+    			    ft_lstadd_back(&rt->lights, lst);
+    			else if (obj->type != OBJ_NULL)
+    			    ft_lstadd_back(&rt->objs, lst);
+    			else
+    			    return(free_objs(obj), free(lst), printf("Unknown obj type\n"), 1);
+			}
+
+		}
+
 		free(line);
 		line = get_next_line_nl(fd, 0);
 	}

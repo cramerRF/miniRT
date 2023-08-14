@@ -11,6 +11,7 @@ SRC		= ./src/main.c \
 		./src/menu/list.c \
 		./src/menu/save.c \
 		./src/menu/load.c \
+		./src/menu/help.c \
 		./src/camera/camera.c \
 		./src/light/light.c \
 		./src/light/ambient_light.c \

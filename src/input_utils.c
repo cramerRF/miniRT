@@ -9,17 +9,17 @@ t_td_point  get_point(char *name, nType norme)
     printf("Input a 3d vector for -%s-\n", name);
     if (norme)
         printf("Will be normalize to %0.2f\n", (float) norme);
-    printf("Input x:\t");
+    printf("Input x:\n");
     line = get_next_line_nl(0, 0);
-    ret.x = ft_atoi(line);
+    ret.x = atof(line);
     free(line);
-    printf("Input y:\t");
+    printf("Input y:\n");
     line = get_next_line_nl(0, 0);
-    ret.y = ft_atoi(line);
+    ret.y = atof(line);
     free(line);
-    printf("Input z:\t");
+    printf("Input z:\n");
     line = get_next_line_nl(0, 0);
-    ret.z = ft_atoi(line);
+    ret.z = atof(line);
     free(line);
     if (!ret.x && !ret.y && !ret.z)
         return (get_point(name, norme));
@@ -47,4 +47,24 @@ nType   get_number(char *name, nType _min, nType _max)
     if (_min >= ret || _max <= ret)
         ret = get_number(name, _min, _max);
     return (ret);
+}
+
+int line_to_point(char *line, t_td_point *p)
+{
+    int     len;
+    char    **split;
+
+    if (!line)
+        return (printf("Error null line\n"), 1);
+    split = ft_split(line, ',');
+    len = 0;
+    while (split[len])
+        len++;
+    if (len != 3)
+        return (printf("Error %d len should be 3\n", len), ft_free_split(split), 1);
+    p->x = atof(split[0]);
+    p->y = atof(split[1]);
+    p->z = atof(split[2]);
+    ft_free_split(split);
+    return (0);
 }

@@ -52,6 +52,7 @@ void	ft_putstr_fd(char *s, int fd);
 void	ft_putendl_fd(char *s, int fd);
 void	ft_putnbr_fd(int n, int fd);
 char	**ft_split(const char *s, char c);
+void	ft_free_split(char **split);
 char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 char	*ft_strtrim(const char *s1, const char *set);
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
