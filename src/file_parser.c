@@ -1,5 +1,18 @@
 #include    "../inc/miniRT.h"
 
+int		rt_is_upper(char *line)
+{
+	int	i;
+
+	i = -1;
+	while (line[++i])
+	{
+		if (line[i] < 'A' || line[i] > 'Z')
+			return (printf("rt_is_upper %s %d\n", line, 0), 0);
+	}
+	return (printf("rt_is_upper %s %d\n", line, 1), 1);
+}
+
 static int		get_obj_type(char *line)
 {
 	printf("%s\n", line);
@@ -55,6 +68,11 @@ static int		read_rt_file(t_rt *rt)
 			obj = parser[type](line);
 			if (obj)
 			{
+				int	flags[1];
+
+				*flags = rt_check_fixed_identifier(rt, obj->key, obj->type); 
+				if ((obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) || TestBit(flags, CHECK_FIX) || TestBit(flags, CHECK_KEY))
+    			    return(free_objs(obj), printf("Error concurrency\n"), 1);
 				lst = ft_lstnew(obj);
     			if (!lst)
     			    return(free_objs(obj), printf("Error creating list\n"), 1);

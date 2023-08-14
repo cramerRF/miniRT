@@ -126,6 +126,8 @@ t_tuple    *read_camera(char *line)
         len++;
     if (len != 5)
         return (printf("Error: split size\n"), ft_free_split(split), free_camera(obj), NULL);
+    if (rt_is_upper(split[0]) && printf("Fixed object\n"))
+        obj->fixed = 1;
     obj->key = ft_strdup(split[1]);
     if (line_to_point(split[3], &((t_camera *) obj->content)->normal))
         return (printf("Error: normal parsing error\n"), ft_free_split(split), free_camera(obj), NULL);

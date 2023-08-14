@@ -1,5 +1,18 @@
 #ifndef MINIRT_H
 # define MINIRT_H
+// Due order of operation wrap 'k' in parentheses in case it
+// is passed as an equation, e.g. i + 1, otherwise the first
+// part evaluates to "A[i + (1/32)]" not "A[(i + 1)/32]"
+#define SetBit(A,k)     ( A[(k)/32] |= (1 << ((k)%32)) )
+#define ClearBit(A,k)   ( A[(k)/32] &= ~(1 << ((k)%32)) )
+#define TestBit(A,k)    ( A[(k)/32] & (1 << ((k)%32)) )
+
+//check add fixed key
+#define CHECK_KEY   0
+#define CHECK_FIX   1
+#define CHECK_EXISTS_TYPE   2
+#define CHECK_N     3
+
 //colors
 # define    COLOR_BLACK     "\x1b[30m"
 # define    COLOR_RED       "\x1b[41m"
@@ -47,6 +60,7 @@ t_td_point  get_point(char *name, nType norme);
 int         line_to_point(char *line, t_td_point *p);
 //file_parser.c
 t_rt	    *open_rt_file(char *name_file);
+int 		rt_is_upper(char *line);
 
 /* src/menu */
 //menu
@@ -61,6 +75,7 @@ int         rt_list(t_rt *rt);
 //edit
 int         rt_edit(t_rt *rt);
 void        *memory(int code, void *arg);
+int    rt_check_fixed_identifier(t_rt *rt, char *key, int type);
 //save
 int         rt_save(t_rt *rt);
 //help

@@ -48,6 +48,53 @@ void    obj_mem_search(void *arg)
     memory(MEM_WRITE, arg);
 }
 
+static void    check_fixed_identifier(t_list *lst, char *key,int type, int flags[CHECK_N])
+{
+    t_tuple *obj;
+
+    while (lst)
+    {
+        printf("Checking\n");
+        obj = lst->content;
+        if (obj->type == type)
+        {
+            if (obj->fixed)
+                flags[CHECK_FIX] = 1;
+            flags[CHECK_EXISTS_TYPE] = 1;
+        }
+        if (!ft_strncmp(obj->key, key, ft_strlen(key)))
+            flags[CHECK_KEY] = 1;
+        lst = lst->next;
+    }
+}
+
+int    rt_check_fixed_identifier(t_rt *rt, char *key, int type)
+{
+    int flags[CHECK_N];
+    int flag[1];
+
+    flags[CHECK_KEY] = 0;
+    flags[CHECK_FIX] = 0;
+    flags[CHECK_EXISTS_TYPE] = 0;
+    check_fixed_identifier(rt->cameras, key, type, flags);
+    check_fixed_identifier(rt->lights, key, type, flags);
+    check_fixed_identifier(rt->objs, key, type, flags);
+    if (flags[CHECK_KEY])
+        printf("Error: identifier already in use\n");
+    if (flags[CHECK_FIX])
+        printf("Error: object type fixed\n");
+    if (flags[CHECK_EXISTS_TYPE])
+        printf("Warning: multiple objs types\n");
+    flag[0] = 0;
+    if (flags[CHECK_KEY])
+        SetBit(((int *) flag), (CHECK_KEY));
+    if (flags[CHECK_FIX])
+        SetBit(((int *) flag), (CHECK_FIX));
+    if (flags[CHECK_EXISTS_TYPE])
+        SetBit(((int *) flag), (CHECK_EXISTS_TYPE));
+    return (*flag);
+}
+
 void    search_obj_key(t_list *lst, t_tuple **ret, char *key)
 {
     t_tuple *obj;
@@ -76,18 +123,6 @@ int rt_edit(t_rt *rt)
     line = get_next_line_nl(0, 0);
     if (!line)
         return (printf("Null line\n"), 1);
-    /*
-    memory(MEM_CLEAR, NULL);
-    memory(MEM_WRITE, line);
-    ft_lstiter(rt->cameras, obj_mem_search);
-    ft_lstiter(rt->lights, obj_mem_search);
-    ft_lstiter(rt->objs, obj_mem_search);
-    printf("->>>>>>>>> %s %s\n", line, (char *) memory(MEM_READ, NULL));
-    if (!ft_strncmp(line, ((t_tuple *) memory(MEM_READ, NULL))->key, ft_strlen(((t_tuple *) memory(MEM_READ, NULL))->key)))
-        return (printf("Not found\n"), free(line), memory(MEM_CLEAR, NULL), 1);
-    edit_obj(memory(MEM_READ, NULL));
-    memory(MEM_CLEAR, NULL);
-    */
     obj = NULL;
     search_obj_key(rt->cameras, &obj, line);
     search_obj_key(rt->lights, &obj, line);

@@ -62,6 +62,8 @@ int 		rt_add(t_rt *rt)
     line = get_next_line_nl(0, 0);
     //Check fixed
     nuw->key = line;
+    if (rt_check_fixed_identifier(rt, nuw->key, nuw->type))
+        return(free_objs(nuw), printf("Error concurrency\n"), 1);
     lst = ft_lstnew(nuw);
     if (!lst)
         return(free_objs(nuw), printf("Error creating list\n"), 1);
