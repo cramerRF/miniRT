@@ -42,6 +42,17 @@
 # define MEM_READ   2
 
 # include "../lib/libft/libft.h"
+/* NAME_MACOS */
+# ifdef RT_MACOS_COMPI
+#  include "../lib/minilibx_macos/mlx.h"
+# endif
+/* NAME_LINUX */
+# ifdef RT_LINUX_COMPI
+#  include "../lib/minilibx_linux/mlx.h"
+#  include "../lib/minilibx_linux/mlx_int.h"
+# endif
+
+# include "../lib/libft/libft.h"
 # include "../lib/gnl/get_next_line_bonus.h"
 # include "./structs.h"
 

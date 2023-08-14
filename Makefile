@@ -37,27 +37,24 @@ GNL_OBJS = ${GNL:.c=.o}
 
 CC		= cc
 
-CFLAGS		= -Wall -Wextra -Werror -g3
+CFLAGS		= -Wall -Wextra -Werror -D RT_MACOS_COMPI
 
 NAME		= miniRT
 
 .c.o:
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
+${NAME}:	MAC
+
 LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
-			make bonus -C ./lib/minilibx_linux
+			make -C ./lib/minilibx_linux
 			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
-
 
 MAC:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
-			make bonus -C ./lib/minilibx_macos
+			make -C ./lib/minilibx_macos
 			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_MAC}
-
-${NAME}:	${OBJS} ${GNL_OBJS} ${HEAD}
-			make bonus -C ./lib/libft
-			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB}
 
 all:		${NAME}
 
@@ -67,6 +64,8 @@ clean:
 
 fclean:		clean
 			make fclean -C ./lib/libft
+			make clean -C ./lib/minilibx_macos
+			make clean -C ./lib/minilibx_linux
 			${RM} ${NAME}
 
 re:			fclean all

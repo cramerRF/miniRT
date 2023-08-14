@@ -129,7 +129,7 @@ typedef struct s_render
     unsigned refresh_ms;
     char     *file_output;
     char     *file_input;
-}
+}   t_render;
 
 //List container
 
