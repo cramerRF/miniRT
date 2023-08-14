@@ -24,6 +24,10 @@ HEAD		= ./inc/miniRT.h \
 
 LIB		= ./lib/libft/libft.a -lm
 
+LIB_MAC = -lmlx -framework OpenGL -framework AppKit -L.
+
+LIB_LINUX	= -lmlx -Lmlx_linux -lmlx_linux -L/usr/lib -Imlx_linux -LXext -LX11 -lz
+
 OBJS		= ${SRC:.c=.o}
 
 GNL		=	./lib/gnl/get_next_line_bonus.c\
@@ -39,6 +43,17 @@ NAME		= miniRT
 
 .c.o:
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+
+LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
+			make bonus -C ./lib/libft
+			make bonus -C ./lib/minilibx_linux
+			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
+
+
+MAC:		${OBJS} ${GNL_OBJS} ${HEAD}
+			make bonus -C ./lib/libft
+			make bonus -C ./lib/minilibx_macos
+			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_MAC}
 
 ${NAME}:	${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
