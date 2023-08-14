@@ -44,7 +44,7 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 	exec[EX_RENDER] = NULL;
 }
 
-void menu_start(t_rt * rt)
+void menu_start(t_rt *rt)
 {
     char    *line;
     short   cmd;
@@ -69,5 +69,7 @@ void menu_start(t_rt * rt)
 			printf("Error\n");
 		if (cmd == EX_EXIT)
 			break ;
+		else if (cmd == EX_LOAD)
+			rt = *get_rt_addr(NULL);
     }
 }

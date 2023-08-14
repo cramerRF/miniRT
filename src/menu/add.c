@@ -10,7 +10,7 @@ static void    set_up_add_parser(t_tuple *(*parser[EX_N])(void))
 	parser[OBJ_CIL] = NULL;
 	parser[OBJ_CON] = NULL;
 	parser[OBJ_AL] = add_ambient_light;
-	parser[OBJ_LI] = NULL;
+	parser[OBJ_LI] = add_light;
 	parser[OBJ_C] = add_camera;
 }
 

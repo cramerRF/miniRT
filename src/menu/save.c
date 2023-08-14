@@ -10,7 +10,7 @@ void    set_up_objs_writer(void     (*objs_writer[OBJ_N])(t_tuple *))
 	objs_writer[OBJ_CIL] = NULL;
 	objs_writer[OBJ_CON] = NULL;
 	objs_writer[OBJ_AL] = write_ambient_light;
-	objs_writer[OBJ_LI] = NULL;
+	objs_writer[OBJ_LI] = write_light;
 	objs_writer[OBJ_C] = write_camera;
 }
 

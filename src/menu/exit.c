@@ -10,7 +10,7 @@ void    set_up_objs_freer(void     (*objs_freer[OBJ_N])(t_tuple *))
 	objs_freer[OBJ_CIL] = NULL;
 	objs_freer[OBJ_CON] = NULL;
 	objs_freer[OBJ_AL] = free_ambient_light;
-	objs_freer[OBJ_LI] = NULL;
+	objs_freer[OBJ_LI] = free_light;
 	objs_freer[OBJ_C] = free_camera;
 }
 

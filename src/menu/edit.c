@@ -10,7 +10,7 @@ void    set_up_objs_editor(void     (*objs_editor[OBJ_N])(t_tuple *))
 	objs_editor[OBJ_CIL] = NULL;
 	objs_editor[OBJ_CON] = NULL;
 	objs_editor[OBJ_AL] = edit_ambient_light;
-	objs_editor[OBJ_LI] = NULL;
+	objs_editor[OBJ_LI] = edit_light;
 	objs_editor[OBJ_C] = edit_camera;
 }
 

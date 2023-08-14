@@ -10,7 +10,7 @@ void    set_up_objs_printer(void     (*objs_printer[OBJ_N])(t_tuple *))
 	objs_printer[OBJ_CIL] = NULL;
 	objs_printer[OBJ_CON] = NULL;
 	objs_printer[OBJ_AL] = print_ambient_light;
-	objs_printer[OBJ_LI] = NULL;
+	objs_printer[OBJ_LI] = print_light;
 	objs_printer[OBJ_C] = print_camera;
 }
 

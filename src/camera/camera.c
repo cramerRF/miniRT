@@ -1,6 +1,5 @@
 #include "../../inc/miniRT.h"
 
-
 t_tuple    *add_camera(void)
 {
     t_camera    *cam;

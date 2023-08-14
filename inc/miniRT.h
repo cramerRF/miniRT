@@ -64,7 +64,7 @@
 
 /* src */
 //gnl_utils
-char	*get_next_line_nl(int fd, int flag);
+char	    *get_next_line_nl(int fd, int flag);
 //input_utils.c
 nType       get_number(char *name, nType min, nType max);
 t_td_point  get_point(char *name, nType norme);
@@ -82,7 +82,7 @@ void        menu_start(t_rt * rt);
 void        free_objs(void *obj);
 int 		rt_exit(t_rt *rt);
 t_rt        **get_rt_addr(t_rt **nuw);
-void    search_obj_key(t_list *lst, t_tuple **ret, char *key);
+void        search_obj_key(t_list *lst, t_tuple **ret, char *key);
 
 //add
 int 		rt_add(t_rt *rt);
@@ -120,4 +120,14 @@ void        edit_ambient_light(t_tuple *obj);
 void        free_ambient_light(t_tuple *cam);
 void        write_ambient_light(t_tuple *obj);
 t_tuple     *read_ambient_light(char *line);
+
+//light
+t_tuple     *add_light(void);
+void        print_light(t_tuple *obj);
+void        edit_light(t_tuple *obj);
+void        free_light(t_tuple *cam);
+void        write_light(t_tuple *obj);
+t_tuple     *read_light(char *line);
+
+
 #endif

@@ -18,9 +18,9 @@ int rt_load(t_rt *rt)
     if (!file)
         file = ft_strdup(rt->file);
     rt_exit(rt);
-    *get_rt_addr(NULL) = open_rt_file(file);
+    *(get_rt_addr(NULL)) = open_rt_file(file);
     free(file);
-    if (!rt)
+    if (!*(get_rt_addr(NULL)))
         return (printf("Error during open_rt_file\n"), 1);
     return (0);
 }

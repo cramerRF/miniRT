@@ -22,6 +22,8 @@ static int		get_obj_type(char *line)
 		return (OBJ_C);
 	else if (!ft_strncmp(line, "A ", 2) || !ft_strncmp(line, "a ", 2))
 		return (OBJ_AL);
+	else if (!ft_strncmp(line, "L ", 2) || !ft_strncmp(line, "l ", 2))
+		return (OBJ_LI);
 	return (0);
 }
 
@@ -35,7 +37,7 @@ static void	setup_parser(t_tuple 	*(*parser[OBJ_N])(char *))
 	parser[OBJ_CIL] = NULL;
 	parser[OBJ_CON] = NULL;
 	parser[OBJ_AL] = read_ambient_light;
-	parser[OBJ_LI] = NULL;
+	parser[OBJ_LI] = read_light;
 	parser[OBJ_C] = read_camera;
 }
 

@@ -26,7 +26,7 @@ LIB		= ./lib/libft/libft.a -lm
 
 LIB_MAC = -lmlx -framework OpenGL -framework AppKit -L.
 
-LIB_LINUX	= -lmlx -Lmlx_linux -lmlx_linux -L/usr/lib -Imlx_linux -LXext -LX11 -lz
+LIB_LINUX	= -L/usr/lib -LXext -LX11 -lz
 
 OBJS		= ${SRC:.c=.o}
 
@@ -37,7 +37,7 @@ GNL_OBJS = ${GNL:.c=.o}
 
 CC		= cc
 
-CFLAGS		= -Wall -Wextra -Werror -D RT_MACOS_COMPI
+CFLAGS		= -Wall -Wextra -Werror
 
 NAME		= miniRT
 
@@ -49,12 +49,12 @@ ${NAME}:	MAC
 LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
 			make -C ./lib/minilibx_linux
-			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
+			${CC} ${CFLAGS} -D RT_LINUX_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
 
 MAC:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
 			make -C ./lib/minilibx_macos
-			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_MAC}
+			${CC} ${CFLAGS} -D RT_MACOS_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_MAC}
 
 all:		${NAME}
 
