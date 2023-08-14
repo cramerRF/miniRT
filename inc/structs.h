@@ -6,7 +6,7 @@
 //Number type
 typedef double  nType;
 //Color type
-typedef char    cType[3];
+typedef unsigned char    cType[3];
 
 typedef struct s_td_point
 {

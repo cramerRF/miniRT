@@ -1,5 +1,24 @@
 #include "../inc/miniRT.h"
 
+void  get_color(char *name, cType color)
+{
+    char        *line;
+    
+    printf("Input a rgb color for -%s-\n", name);
+    printf("Input x:\n");
+    line = get_next_line_nl(0, 0);
+    color[0] = ft_atoi(line) % 256;
+    free(line);
+    printf("Input y:\n");
+    line = get_next_line_nl(0, 0);
+    color[1] = ft_atoi(line) % 256;
+    free(line);
+    printf("Input z:\n");
+    line = get_next_line_nl(0, 0);
+    color[2] = ft_atoi(line) % 256;
+    free(line);
+}
+
 t_td_point  get_point(char *name, nType norme)
 {
     t_td_point  ret;
@@ -42,7 +61,7 @@ nType   get_number(char *name, nType _min, nType _max)
         return (printf("Error: get_number _min > _max\n"), 0);
     printf("Input a number for -%s- between %0.2f and %0.2f:\n", name, (float) _min, (float) _max);
     line = get_next_line_nl(0, 0);
-    ret = ft_atoi(line);
+    ret = atof(line);
     free(line);
     if (_min >= ret || _max <= ret)
         ret = get_number(name, _min, _max);
@@ -65,6 +84,26 @@ int line_to_point(char *line, t_td_point *p)
     p->x = atof(split[0]);
     p->y = atof(split[1]);
     p->z = atof(split[2]);
+    ft_free_split(split);
+    return (0);
+}
+
+int line_to_color(char *line, cType color)
+{
+    int     len;
+    char    **split;
+
+    if (!line)
+        return (printf("Error null line\n"), 1);
+    split = ft_split(line, ',');
+    len = 0;
+    while (split[len])
+        len++;
+    if (len != 3)
+        return (printf("Error %d len should be 3\n", len), ft_free_split(split), 1);
+    color[0] = ft_atoi(split[0]) % 256;
+    color[1] = ft_atoi(split[1]) % 256;
+    color[2] = ft_atoi(split[2]) % 256;
     ft_free_split(split);
     return (0);
 }

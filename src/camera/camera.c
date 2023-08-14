@@ -84,7 +84,10 @@ void    write_camera(t_tuple *obj)
 
     cam = obj->content;
     fd = *((int *) memory(MEM_READ, NULL));
-    dprintf(fd, "C %s %f,%f,%f %f,%f,%f %f\n", obj->key, cam->vertex.x, cam->vertex.y, cam->vertex.z, cam->normal.x, cam->normal.y, cam->normal.z, cam->fov);
+    if (obj->fixed)
+        dprintf(fd, "C %s %f,%f,%f %f,%f,%f %f\n", obj->key, cam->vertex.x, cam->vertex.y, cam->vertex.z, cam->normal.x, cam->normal.y, cam->normal.z, cam->fov);
+    else
+        dprintf(fd, "c %s %f,%f,%f %f,%f,%f %f\n", obj->key, cam->vertex.x, cam->vertex.y, cam->vertex.z, cam->normal.x, cam->normal.y, cam->normal.z, cam->fov);
 }
 
 t_tuple     *malloc_camera_obj(void)

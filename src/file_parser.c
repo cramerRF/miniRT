@@ -8,9 +8,9 @@ int		rt_is_upper(char *line)
 	while (line[++i])
 	{
 		if (line[i] < 'A' || line[i] > 'Z')
-			return (printf("rt_is_upper %s %d\n", line, 0), 0);
+			return (0);
 	}
-	return (printf("rt_is_upper %s %d\n", line, 1), 1);
+	return (1);
 }
 
 static int		get_obj_type(char *line)
@@ -20,6 +20,8 @@ static int		get_obj_type(char *line)
 		return (0);
 	else if (!ft_strncmp(line, "C ", 2) || !ft_strncmp(line, "c ", 2))
 		return (OBJ_C);
+	else if (!ft_strncmp(line, "A ", 2) || !ft_strncmp(line, "a ", 2))
+		return (OBJ_AL);
 	return (0);
 }
 
@@ -32,7 +34,7 @@ static void	setup_parser(t_tuple 	*(*parser[OBJ_N])(char *))
 	parser[OBJ_BOX] = NULL;
 	parser[OBJ_CIL] = NULL;
 	parser[OBJ_CON] = NULL;
-	parser[OBJ_AL] = NULL;
+	parser[OBJ_AL] = read_ambient_light;
 	parser[OBJ_LI] = NULL;
 	parser[OBJ_C] = read_camera;
 }

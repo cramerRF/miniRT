@@ -69,6 +69,8 @@ char	*get_next_line_nl(int fd, int flag);
 nType       get_number(char *name, nType min, nType max);
 t_td_point  get_point(char *name, nType norme);
 int         line_to_point(char *line, t_td_point *p);
+void        get_color(char *name, cType color);
+int         line_to_color(char *line, cType color);
 //file_parser.c
 t_rt	    *open_rt_file(char *name_file);
 int 		rt_is_upper(char *line);
@@ -108,6 +110,14 @@ void        edit_camera(t_tuple *obj);
 void        free_camera(t_tuple *cam);
 void        write_camera(t_tuple *obj);
 t_tuple     *read_camera(char *line);
+
 /* src/light */
 
+//ambient_light
+t_tuple     *add_ambient_light(void);
+void        print_ambient_light(t_tuple *obj);
+void        edit_ambient_light(t_tuple *obj);
+void        free_ambient_light(t_tuple *cam);
+void        write_ambient_light(t_tuple *obj);
+t_tuple     *read_ambient_light(char *line);
 #endif
