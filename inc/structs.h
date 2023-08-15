@@ -119,18 +119,6 @@ typedef struct s_camera
     nType       fov;
 }   t_camera;
 
-//Render
-
-typedef struct s_render
-{
-    unsigned height;
-    unsigned width;
-    char     preview;
-    unsigned refresh_ms;
-    char     *file_output;
-    char     *file_input;
-}   t_render;
-
 //List container
 
 typedef struct s_tuple
@@ -141,6 +129,55 @@ typedef struct s_tuple
     void    *content;
 }   t_tuple;
 
+//Renders
+
+typedef struct s_mlx
+{
+    void    *addr;
+}   t_mlx;
+
+typedef struct s_prop_image
+{
+    unsigned    pixel_witdh;
+    unsigned    pixel_height;
+    nType       far_near;
+    nType       far_plane;
+    unsigned    ratio[2];
+}   t_prop_image;
+
+# define    PERFORMA_L_BOUNCES  0
+# define    PERFORMA_N_DIFRA    1
+# define    PERFORMA_N  2
+
+typedef struct s_prop_performance
+{
+    unsigned    n_threads;
+    unsigned    number_of_captures;
+    unsigned    level;
+    unsigned    flags[PERFORMA_N];
+}   t_prop_performance;
+
+# define    OUTPUT_BIPMAP   0
+# define    OUTPUT_RT       1
+# define    OUTPUT_FORMATS  2
+
+typedef struct s_prop_output
+{
+    unsigned    format;
+    char        *file;
+}   t_prop_output;
+
+typedef struct s_render
+{
+    t_mlx               mlx;
+    t_camera            *cam;
+    t_list              *lights;
+    t_list              *objs;
+    t_prop_image        prop_img;
+    t_prop_performance   prop_perf;
+    t_prop_output       prop_out;
+}   t_render;
+
 //RT
 
 typedef struct s_rt
@@ -148,6 +185,7 @@ typedef struct s_rt
     t_list  *cameras;
     t_list  *lights;
     t_list  *objs;
+    t_list  *renders;
     char    *file;
 }   t_rt;
 

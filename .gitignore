@@ -1,3 +1,4 @@
 .vscode
 *.rt
 lmlx_linux.a
+libmlx.a
