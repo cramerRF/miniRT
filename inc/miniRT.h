@@ -103,6 +103,22 @@ int 		rt_delete(t_rt *rt);
 
 /* src/objs */
 
+//properties
+int                 parse_properties(t_obj_properties *prop, char *line);
+t_obj_properties    *malloc_properties();
+void                write_properties(int fd, t_obj_properties  *prop);
+void                edit_prop(t_obj_properties *prop);
+void                print_properties(t_obj_properties   *prop);
+
+//sphere
+t_tuple     *add_sphere(void);
+void        print_sphere(t_tuple *obj);
+void        edit_sphere(t_tuple *obj);
+void        free_sphere(t_tuple *cam);
+void        write_sphere(t_tuple *obj);
+t_tuple     *read_sphere(char *line);
+t_tuple     *malloc_sphere_obj(void);
+
 //camera
 t_tuple     *add_camera(void);
 void        print_camera(t_tuple *obj);

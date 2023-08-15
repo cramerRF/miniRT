@@ -2,25 +2,12 @@
 
 t_tuple    *add_sphere(void)
 {
-    t_sphere     *sph;
     t_tuple     *obj;
 
-    sph = malloc(sizeof(t_sphere));
-    if (!sph)
-        return (NULL);
-    sph->center = (t_td_point) {0, 0, 0};
-    sph->color[0] = 255;
-    sph->color[1] = 0;
-    sph->color[2] = 0;
-    sph->ratio = 1;
-    obj = malloc(sizeof(t_tuple));
+    obj = malloc_sphere_obj();
     if (!obj)
-        return (free(sph), NULL);
-    obj->content = sph;
-    obj->type = OBJ_SPH;
-    obj->key = NULL;
-    obj->fixed = 0;
-    printf("sphere: ->%s<- addr_obj %p addr_content %p sph %p\n", obj->key, obj, obj->content, sph);
+        return (printf("Error: mallocing object\n"), NULL);
+    printf("sphere: ->%s<- addr_obj %p addr_content %p\n", obj->key, obj, obj->content);
     return (obj);
 }
 
@@ -31,8 +18,8 @@ void    print_sphere(t_tuple *obj)
     sph = obj->content;
     printf("sphere:\t->%s<- addr_obj %p addr_content %p sph %p\n", obj->key, obj, obj->content, sph);
     printf("Center:\t%0.3f %0.3f %0.3f\n", sph->center.x, sph->center.y, sph->center.z);
-    printf("Color:\t%d %d %d\n", sph->color[0], sph->color[1], sph->color[2]);
-    printf("Ratio:\t%0.3f\n", sph->ratio);
+    printf("Radius:\t%0.3f\n", sph->radius);
+    print_properties(sph->prop);
     printf("Fixed:\t%d\n\n", obj->fixed);
 }
 
@@ -47,14 +34,14 @@ void    edit_sphere(t_tuple *obj)
         printf ("This obj is fixed\n");
     while (1)
     {
-        printf("Editing sphere %p\nratio, center, color, exit\n", sph);
+        printf("Editing sphere %p\nradius, center, prop, exit\n", sph);
         line = get_next_line_nl(0, 0);
-        if (!ft_strncmp(line, "ratio", 4))
-            sph->ratio = get_number("ratio", 0, 1);
+        if (!ft_strncmp(line, "radius", 7))
+            sph->radius = get_number("radius", 0, +INFINITY);
         else if (!ft_strncmp(line, "center", 7))
-            sph->center = get_point("center", 1);
-        else if (!ft_strncmp(line, "color", 7))
-            get_color("color", sph->color);
+            sph->center = get_point("center", 0);
+        else if (!ft_strncmp(line, "prop", 7))
+            edit_prop(sph->prop);
         else if (!ft_strncmp(line, "exit", 5))
             break ;
         free(line);
@@ -67,7 +54,7 @@ void    free_sphere(t_tuple *obj)
 {
     if (obj)
     {
-        free(((t_sphere *) obj->content)->prop)
+        free(((t_sphere *) obj->content)->prop);
         if (obj->content)
             free(obj->content);
         if (obj->key)
@@ -87,10 +74,11 @@ void    write_sphere(t_tuple *obj)
     sph = obj->content;
     fd = *((int *) memory(MEM_READ, NULL));
     if (obj->fixed)
-        dprintf(fd, "SP %s %f,%f,%f %f", obj->key, sph->center.x, sph->center.y, sph->center.z, sph->radius);
+        dprintf(fd, "SP %s %f,%f,%f %f ", obj->key, sph->center.x, sph->center.y, sph->center.z, sph->radius);
     else
-        dprintf(fd, "sp %s %f,%f,%f %f", obj->key, sph->center.x, sph->center.y, sph->center.z, sph->radius);
+        dprintf(fd, "sp %s %f,%f,%f %f ", obj->key, sph->center.x, sph->center.y, sph->center.z, sph->radius);
     write_properties(fd, sph->prop);
+    dprintf(fd, "\n");
 }
 
 t_tuple     *malloc_sphere_obj(void)
