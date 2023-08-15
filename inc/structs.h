@@ -30,9 +30,9 @@ typedef struct s_obj_properties
 
 typedef struct s_td_triangle
 {
-    t_td_point          x;
-    t_td_point          y;
-    t_td_point          z;
+    t_td_point          a;
+    t_td_point          b;
+    t_td_point          c;
     t_obj_properties    *prop;
 }   t_td_triangle;
 

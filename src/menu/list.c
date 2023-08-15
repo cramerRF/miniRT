@@ -3,9 +3,9 @@
 void    set_up_objs_printer(void     (*objs_printer[OBJ_N])(t_tuple *))
 {
     objs_printer[OBJ_NULL] = NULL;
-	objs_printer[OBJ_TRI] = NULL;
+	objs_printer[OBJ_TRI] = print_triangle;
 	objs_printer[OBJ_SPH] = print_sphere;
-	objs_printer[OBJ_PLA] = NULL;
+	objs_printer[OBJ_PLA] = print_plane;
 	objs_printer[OBJ_BOX] = NULL;
 	objs_printer[OBJ_CIL] = NULL;
 	objs_printer[OBJ_CON] = NULL;

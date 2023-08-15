@@ -3,9 +3,9 @@
 void    set_up_objs_writer(void     (*objs_writer[OBJ_N])(t_tuple *))
 {
     objs_writer[OBJ_NULL] = NULL;
-	objs_writer[OBJ_TRI] = NULL;
+	objs_writer[OBJ_TRI] = write_triangle;
 	objs_writer[OBJ_SPH] = write_sphere;
-	objs_writer[OBJ_PLA] = NULL;
+	objs_writer[OBJ_PLA] = write_plane;
 	objs_writer[OBJ_BOX] = NULL;
 	objs_writer[OBJ_CIL] = NULL;
 	objs_writer[OBJ_CON] = NULL;

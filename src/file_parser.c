@@ -26,6 +26,10 @@ static int		get_obj_type(char *line)
 		return (OBJ_LI);
 	else if (!ft_strncmp(line, "SP ", 3) || !ft_strncmp(line, "sp ", 3))
 		return (OBJ_SPH);
+	else if (!ft_strncmp(line, "TR ", 3) || !ft_strncmp(line, "tr ", 3))
+		return (OBJ_TRI);
+	else if (!ft_strncmp(line, "PL ", 3) || !ft_strncmp(line, "pl ", 3))
+		return (OBJ_PLA);
 	return (0);
 }
 

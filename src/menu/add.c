@@ -3,9 +3,9 @@
 static void    set_up_add_parser(t_tuple *(*parser[EX_N])(void))
 {
     parser[OBJ_NULL] = NULL;
-	parser[OBJ_TRI] = NULL;
+	parser[OBJ_TRI] = add_triangle;
 	parser[OBJ_SPH] = add_sphere;
-	parser[OBJ_PLA] = NULL;
+	parser[OBJ_PLA] = add_plane;
 	parser[OBJ_BOX] = NULL;
 	parser[OBJ_CIL] = NULL;
 	parser[OBJ_CON] = NULL;

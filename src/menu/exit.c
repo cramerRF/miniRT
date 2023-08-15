@@ -3,9 +3,9 @@
 void    set_up_objs_freer(void     (*objs_freer[OBJ_N])(t_tuple *))
 {
 	objs_freer[OBJ_NULL] = NULL;
-	objs_freer[OBJ_TRI] = NULL;
+	objs_freer[OBJ_TRI] = free_triangle;
 	objs_freer[OBJ_SPH] = free_sphere;
-	objs_freer[OBJ_PLA] = NULL;
+	objs_freer[OBJ_PLA] = free_plane;
 	objs_freer[OBJ_BOX] = NULL;
 	objs_freer[OBJ_CIL] = NULL;
 	objs_freer[OBJ_CON] = NULL;

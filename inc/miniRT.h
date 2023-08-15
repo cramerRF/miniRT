@@ -118,6 +118,22 @@ void        free_sphere(t_tuple *cam);
 void        write_sphere(t_tuple *obj);
 t_tuple     *read_sphere(char *line);
 
+//plane
+t_tuple     *add_plane(void);
+void        print_plane(t_tuple *obj);
+void        edit_plane(t_tuple *obj);
+void        free_plane(t_tuple *cam);
+void        write_plane(t_tuple *obj);
+t_tuple     *read_plane(char *line);
+
+//triangle
+t_tuple     *add_triangle(void);
+void        print_triangle(t_tuple *obj);
+void        edit_triangle(t_tuple *obj);
+void        free_triangle(t_tuple *cam);
+void        write_triangle(t_tuple *obj);
+t_tuple     *read_triangle(char *line);
+
 //camera
 t_tuple     *add_camera(void);
 void        print_camera(t_tuple *obj);

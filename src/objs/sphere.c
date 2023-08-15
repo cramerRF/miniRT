@@ -6,9 +6,9 @@ t_tuple    *add_sphere(void)
     t_tuple     *obj;
 
     sph = malloc(sizeof(t_sphere));
-    ft_bzero(sph, sizeof(t_sphere));
     if (!sph)
         return (printf("Error mallocing sph\n"), NULL);
+    ft_bzero(sph, sizeof(t_sphere));
     sph->prop = malloc_properties(sizeof(t_obj_properties));
     if (!sph->prop)
         return (printf("Error mallocing sph->prop\n"), free(sph), NULL);
