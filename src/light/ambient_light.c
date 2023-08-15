@@ -87,26 +87,6 @@ void    write_ambient_light(t_tuple *obj)
         dprintf(fd, "a %s %d,%d,%d %f\n", obj->key, al->color[0], al->color[1], al->color[2], al->ratio);
 }
 
-t_tuple     *malloc_ambient_light_obj(void)
-{
-    t_ambient_light *al;
-    t_tuple         *obj;
-
-    al = malloc(sizeof(t_ambient_light));
-    if (!al)
-        return (printf("Error mallocing ambient light\n"), NULL);
-    obj = malloc(sizeof(t_tuple));
-    if (!obj)
-        return (printf("Error mallocing object\n"), free(al), NULL);
-    ft_bzero(al, sizeof(t_ambient_light));
-    ft_bzero(obj, sizeof(t_tuple));
-    obj->type = OBJ_AL;
-    obj->content = al;
-    obj->key = NULL;
-    obj->fixed = 0;
-    return (obj);
-}
-
 t_tuple    *read_ambient_light(char *line)
 {
     t_tuple    *obj;
@@ -118,7 +98,7 @@ t_tuple    *read_ambient_light(char *line)
     split = ft_split(line, ' ');
     if (!split)
         return (printf("Error: split failed\n"), NULL);
-    obj = malloc_ambient_light_obj();
+    obj = add_camera();
     if (!obj)
         return (printf("Error: malloc obj\n"), ft_free_split(split), NULL);
     len = 0;

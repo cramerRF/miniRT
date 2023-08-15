@@ -91,26 +91,6 @@ void    write_light(t_tuple *obj)
         dprintf(fd, "l %s %f,%f,%f %d,%d,%d %f\n", obj->key, li->center.x, li->center.y, li->center.z, li->color[0], li->color[1], li->color[2], li->ratio);
 }
 
-t_tuple     *malloc_light_obj(void)
-{
-    t_light    *li;
-    t_tuple     *obj;
-
-    li = malloc(sizeof(t_light));
-    if (!li)
-        return (printf("Error mallocing li\n"), NULL);
-    obj = malloc(sizeof(t_tuple));
-    if (!obj)
-        return (printf("Error mallocing object\n"), free(li), NULL);
-    ft_bzero(li, sizeof(t_light));
-    ft_bzero(obj, sizeof(t_tuple));
-    obj->type = OBJ_LI;
-    obj->content = li;
-    obj->key = NULL;
-    obj->fixed = 0;
-    return (obj);
-}
-
 t_tuple    *read_light(char *line)
 {
     t_tuple    *obj;
@@ -122,7 +102,7 @@ t_tuple    *read_light(char *line)
     split = ft_split(line, ' ');
     if (!split)
         return (printf("Error: split failed\n"), NULL);
-    obj = malloc_light_obj();
+    obj = add_light();
     if (!obj)
         return (printf("Error: malloc obj\n"), ft_free_split(split), NULL);
     len = 0;

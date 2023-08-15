@@ -117,7 +117,6 @@ void        edit_sphere(t_tuple *obj);
 void        free_sphere(t_tuple *cam);
 void        write_sphere(t_tuple *obj);
 t_tuple     *read_sphere(char *line);
-t_tuple     *malloc_sphere_obj(void);
 
 //camera
 t_tuple     *add_camera(void);

@@ -89,26 +89,6 @@ void    write_camera(t_tuple *obj)
         dprintf(fd, "c %s %f,%f,%f %f,%f,%f %f\n", obj->key, cam->vertex.x, cam->vertex.y, cam->vertex.z, cam->normal.x, cam->normal.y, cam->normal.z, cam->fov);
 }
 
-t_tuple     *malloc_camera_obj(void)
-{
-    t_camera    *cam;
-    t_tuple     *obj;
-
-    cam = malloc(sizeof(t_camera));
-    if (!cam)
-        return (printf("Error mallocing cam\n"), NULL);
-    obj = malloc(sizeof(t_tuple));
-    if (!obj)
-        return (printf("Error mallocing object\n"), free(cam), NULL);
-    ft_bzero(cam, sizeof(t_camera));
-    ft_bzero(obj, sizeof(t_tuple));
-    obj->type = OBJ_C;
-    obj->content = cam;
-    obj->key = NULL;
-    obj->fixed = 0;
-    return (obj);
-}
-
 t_tuple    *read_camera(char *line)
 {
     t_tuple    *obj;
@@ -120,7 +100,7 @@ t_tuple    *read_camera(char *line)
     split = ft_split(line, ' ');
     if (!split)
         return (printf("Error: split failed\n"), NULL);
-    obj = malloc_camera_obj();
+    obj = add_camera();
     if (!obj)
         return (printf("Error: malloc obj\n"), ft_free_split(split), NULL);
     len = 0;

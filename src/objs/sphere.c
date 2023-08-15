@@ -2,12 +2,24 @@
 
 t_tuple    *add_sphere(void)
 {
+    t_sphere    *sph;
     t_tuple     *obj;
 
-    obj = malloc_sphere_obj();
+    sph = malloc(sizeof(t_sphere));
+    ft_bzero(sph, sizeof(t_sphere));
+    if (!sph)
+        return (printf("Error mallocing sph\n"), NULL);
+    sph->prop = malloc_properties(sizeof(t_obj_properties));
+    if (!sph->prop)
+        return (printf("Error mallocing sph->prop\n"), free(sph), NULL);
+    obj = malloc(sizeof(t_tuple));
     if (!obj)
-        return (printf("Error: mallocing object\n"), NULL);
-    printf("sphere: ->%s<- addr_obj %p addr_content %p\n", obj->key, obj, obj->content);
+        return (printf("Error mallocing object\n"), free(sph->prop), free(sph), NULL);
+    ft_bzero(obj, sizeof(t_tuple));
+    obj->type = OBJ_SPH;
+    obj->content = sph;
+    obj->key = NULL;
+    obj->fixed = 0;
     return (obj);
 }
 
@@ -81,29 +93,6 @@ void    write_sphere(t_tuple *obj)
     dprintf(fd, "\n");
 }
 
-t_tuple     *malloc_sphere_obj(void)
-{
-    t_sphere    *sph;
-    t_tuple     *obj;
-
-    sph = malloc(sizeof(t_sphere));
-    ft_bzero(sph, sizeof(t_sphere));
-    if (!sph)
-        return (printf("Error mallocing sph\n"), NULL);
-    sph->prop = malloc_properties(sizeof(t_obj_properties));
-    if (!sph->prop)
-        return (printf("Error mallocing sph->prop\n"), free(sph), NULL);
-    obj = malloc(sizeof(t_tuple));
-    if (!obj)
-        return (printf("Error mallocing object\n"), free(sph->prop), free(sph), NULL);
-    ft_bzero(obj, sizeof(t_tuple));
-    obj->type = OBJ_SPH;
-    obj->content = sph;
-    obj->key = NULL;
-    obj->fixed = 0;
-    return (obj);
-}
-
 t_tuple    *read_sphere(char *line)
 {
     t_tuple    *obj;
@@ -115,7 +104,7 @@ t_tuple    *read_sphere(char *line)
     split = ft_split(line, ' ');
     if (!split)
         return (printf("Error: split failed\n"), NULL);
-    obj = malloc_sphere_obj();
+    obj = add_sphere();
     if (!obj)
         return (printf("Error: malloc obj\n"), ft_free_split(split), NULL);
     len = 0;
