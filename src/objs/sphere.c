@@ -87,6 +87,7 @@ t_tuple     *malloc_sphere_obj(void)
     t_tuple     *obj;
 
     sph = malloc(sizeof(t_sphere));
+    ft_bzero(sph, sizeof(t_sphere));
     if (!sph)
         return (printf("Error mallocing sph\n"), NULL);
     sph->prop = malloc_properties(sizeof(t_obj_properties));
@@ -95,7 +96,6 @@ t_tuple     *malloc_sphere_obj(void)
     obj = malloc(sizeof(t_tuple));
     if (!obj)
         return (printf("Error mallocing object\n"), free(sph->prop), free(sph), NULL);
-    ft_bzero(sph, sizeof(t_sphere));
     ft_bzero(obj, sizeof(t_tuple));
     obj->type = OBJ_SPH;
     obj->content = sph;

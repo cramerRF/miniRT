@@ -4,7 +4,7 @@ static void    set_up_add_parser(t_tuple *(*parser[EX_N])(void))
 {
     parser[OBJ_NULL] = NULL;
 	parser[OBJ_TRI] = NULL;
-	parser[OBJ_SPH] = NULL;
+	parser[OBJ_SPH] = add_sphere;
 	parser[OBJ_PLA] = NULL;
 	parser[OBJ_BOX] = NULL;
 	parser[OBJ_CIL] = NULL;

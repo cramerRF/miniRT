@@ -24,6 +24,8 @@ static int		get_obj_type(char *line)
 		return (OBJ_AL);
 	else if (!ft_strncmp(line, "L ", 2) || !ft_strncmp(line, "l ", 2))
 		return (OBJ_LI);
+	else if (!ft_strncmp(line, "SP ", 3) || !ft_strncmp(line, "sp ", 3))
+		return (OBJ_SPH);
 	return (0);
 }
 
@@ -31,7 +33,7 @@ static void	setup_parser(t_tuple 	*(*parser[OBJ_N])(char *))
 {
 	parser[OBJ_NULL] = NULL;
 	parser[OBJ_TRI] = NULL;
-	parser[OBJ_SPH] = NULL;
+	parser[OBJ_SPH] = read_sphere;
 	parser[OBJ_PLA] = NULL;
 	parser[OBJ_BOX] = NULL;
 	parser[OBJ_CIL] = NULL;

@@ -1,7 +1,9 @@
 #include "../../inc/miniRT.h"
 
-void    print_properties(t_obj_properties   *prop)
+void    print_properties(t_obj_properties *prop)
 {
+    if (!prop)
+        return ;
     printf("\tProperties %p\n", prop);
     printf("\t\tColor:\t%d,%d,%d\n", prop->color[0], prop->color[1], prop->color[2]);
     printf("\t\tDensity:\t%0.3f\n", prop->density);
@@ -13,6 +15,8 @@ void    edit_prop(t_obj_properties *prop)
 {
     char        *line;
 
+    if (!prop)
+        return ;
     print_properties(prop);
     while (1)
     {
@@ -39,6 +43,8 @@ void    edit_prop(t_obj_properties *prop)
 
 void    write_properties(int fd, t_obj_properties  *prop)
 {
+    if (!prop)
+        return ;
     dprintf(fd, "%d,%d,%d_%0.3f_%0.3f_%0.3f", prop->color[0], prop->color[1], prop->color[2], prop->transparency, prop->reflexction, prop->density);
 }
 
@@ -62,6 +68,8 @@ int    parse_properties(t_obj_properties *prop, char *line)
     char    **split;
     int     len;
 
+    if (!line)
+        return (1);
     split = ft_split(line, '_');
     if (!split)
         return (printf("Error: mallocing split\n"), 1);
@@ -81,5 +89,6 @@ int    parse_properties(t_obj_properties *prop, char *line)
     if (atof(split[3]) < 0 || atof(split[3]) > 1)
         return (printf("Error: density out of boundaries\n"), ft_free_split(split), 1);
     prop->density = atof(split[3]);
+    ft_free_split(split);
     return (0);
 }

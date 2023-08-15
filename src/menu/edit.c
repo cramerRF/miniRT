@@ -4,7 +4,7 @@ void    set_up_objs_editor(void     (*objs_editor[OBJ_N])(t_tuple *))
 {
     objs_editor[OBJ_NULL] = NULL;
 	objs_editor[OBJ_TRI] = NULL;
-	objs_editor[OBJ_SPH] = NULL;
+	objs_editor[OBJ_SPH] = edit_sphere;
 	objs_editor[OBJ_PLA] = NULL;
 	objs_editor[OBJ_BOX] = NULL;
 	objs_editor[OBJ_CIL] = NULL;
