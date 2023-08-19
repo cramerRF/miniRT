@@ -18,7 +18,8 @@ SRC		= ./src/main.c \
 		./src/objs/properties.c \
 		./src/objs/sphere.c \
 		./src/objs/plane.c \
-		./src/objs/triangle.c
+		./src/objs/triangle.c \
+		./src/render/init.c
 
 
 HEAD		= ./inc/miniRT.h \

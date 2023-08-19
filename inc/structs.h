@@ -140,13 +140,13 @@ typedef struct s_prop_image
 {
     unsigned    pixel_witdh;
     unsigned    pixel_height;
-    nType       far_near;
+    nType       near_plane;
     nType       far_plane;
     unsigned    ratio[2];
 }   t_prop_image;
 
-# define    PERFORMA_L_BOUNCES  0
-# define    PERFORMA_N_DIFRA    1
+# define    PERFORMA_O_REFRA    0
+# define    PERFORMA_O_DIFRA    1
 # define    PERFORMA_N  2
 
 typedef struct s_prop_performance
