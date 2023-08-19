@@ -185,7 +185,7 @@ int    render_get_options(t_rt *rt, t_render **render)
     free(line);
     if (!obj)
         return (printf("Camera nott found\n"), free(*render), 1);
-    (*render)->cam = obj->content;
+    ft_memmove(&(*render)->cam, obj->content, sizeof(t_camera));
     if (get_prop_image(&(*render)->prop_img))
         return (printf("Error: prop_image\n"), free(*render), 1);
     if (get_prop_performance(&(*render)->prop_perf))
@@ -194,6 +194,8 @@ int    render_get_options(t_rt *rt, t_render **render)
         return (printf("Error: prop_output\n"), free(*render), 1);
     return (0);
 }
+
+//print render
 
 void    print_render(t_render *render)
 {
@@ -212,13 +214,112 @@ void    print_render(t_render *render)
     printf("\tFlags\n");
     i = -1;
     while (++i < PERFORMA_N)
-        printf("\t\tflags[%u]\t%u\n", render->prop_perf.flags[i]);    
+        printf("\t\tflags[%u]\t%u\n", i, render->prop_perf.flags[i]);    
     printf("\nPrinting prop output\n");
     printf("\tformat\t%u\n", render->prop_out.format);    
     printf("\tfile\t%s\n\n", render->prop_out.file);
 }
 
 //Copy lights, objects and single
+void    setup_size_mem(int size_mem[OBJ_N])
+{
+    size_mem[OBJ_NULL] = 0;
+    size_mem[OBJ_TRI] = sizeof(t_td_triangle);
+    size_mem[OBJ_SPH] = sizeof(t_sphere);
+    size_mem[OBJ_PLA] = sizeof(t_plane);
+    size_mem[OBJ_BOX] = sizeof(t_box);
+    size_mem[OBJ_CIL] = sizeof(t_cilinder);
+    size_mem[OBJ_CON] = sizeof(t_cone);
+    size_mem[OBJ_AL] = sizeof(t_ambient_light);
+    size_mem[OBJ_LI] = sizeof(t_light);
+    size_mem[OBJ_C] = sizeof(t_camera);
+}
+
+
+void *copy_object(void *content)
+{
+    t_tuple *original;
+    static int     size_mem[OBJ_N];
+    t_tuple *ret;
+
+    if (!size_mem[OBJ_C])
+        setup_size_mem(size_mem);
+    original = content;
+    ret = malloc(sizeof(t_tuple));
+    if (!ret)
+        return (printf("Error: mallocing t_tuple\n"), NULL);
+    ft_bzero(ret, sizeof(t_tuple));
+    if (original->type == OBJ_C || original->type == OBJ_LI || original->type == OBJ_AL)
+    {
+        ret->type = original->type;
+        ret->content = malloc(sizeof(size_mem[original->type]));
+        if (!ret->content)
+            return (printf("Error: mallocing \n"), free(ret), NULL);
+        ft_memmove(ret->content, original->content, sizeof(size_mem[original->type]));
+    }
+    else if (original->type && original->type < OBJ_AL)
+    {
+           ret->type = original->type;
+        ret->content = malloc(sizeof(size_mem[original->type]));
+        if (!ret->content)
+            return (printf("Error: mallocing \n"), free(ret), NULL);
+        ft_memmove(ret->content, original->content, sizeof(size_mem[original->type]));
+        if (original->type == OBJ_TRI)
+        {
+            ((t_td_triangle *) ret->content)->prop = malloc(sizeof(t_td_triangle));
+            if (!((t_td_triangle *) ret->content)->prop)
+                return (free(ret->content), free(ret), NULL);
+            ft_memmove(((t_td_triangle *) ret->content)->prop, ((t_td_triangle *) original->content)->prop, sizeof(t_td_triangle));
+        }
+        else if (original->type == OBJ_SPH)
+        {
+            ((t_sphere *) ret->content)->prop = malloc(sizeof(t_sphere));
+            if (!((t_sphere *) ret->content)->prop)
+                return (free(ret->content), free(ret), NULL);
+            ft_memmove(((t_sphere *) ret->content)->prop, ((t_sphere *) original->content)->prop, sizeof(t_td_triangle));
+        }
+        else if (original->type == OBJ_PLA)
+        {
+            ((t_plane *) ret->content)->prop = malloc(sizeof(t_plane));
+            if (!((t_plane *) ret->content)->prop)
+                return (free(ret->content), free(ret), NULL);
+            ft_memmove(((t_plane *) ret->content)->prop, ((t_plane *) original->content)->prop, sizeof(t_td_triangle));
+        }
+        else if (original->type == OBJ_BOX)
+        {
+            ((t_box *) ret->content)->prop = malloc(sizeof(t_box));
+            if (!((t_box *) ret->content)->prop)
+                return (free(ret->content), free(ret), NULL);
+            ft_memmove(((t_box *) ret->content)->prop, ((t_box *) original->content)->prop, sizeof(t_td_triangle));
+        }
+        else if (original->type == OBJ_CIL)
+        {
+            ((t_cilinder *) ret->content)->prop = malloc(sizeof(t_cilinder));
+            if (!((t_cilinder *) ret->content)->prop)
+                return (free(ret->content), free(ret), NULL);
+            ft_memmove(((t_cilinder *) ret->content)->prop, ((t_cilinder *) original->content)->prop, sizeof(t_td_triangle));
+        }
+        else if (original->type == OBJ_CON)
+        {
+            ((t_cone *) ret->content)->prop = malloc(sizeof(t_cone));
+            if (!((t_cone *) ret->content)->prop)
+                return (free(ret->content), free(ret), NULL);
+            ft_memmove(((t_cone *) ret->content)->prop, ((t_cone *) original->content)->prop, sizeof(t_td_triangle));
+        }
+        else
+            return (free(ret->content), free(ret), NULL);
+    }
+    else
+        return (printf("Error: unknow object type"), NULL);
+    return (ret);
+}
+
+void    copy_scene_to_render(t_rt *rt, t_render *render)
+{
+    render->lights = ft_lstmap(rt->lights, copy_object, free_objs);
+    render->objs = ft_lstmap(rt->objs, copy_object, free_objs);
+}
+
 //launch render
 //Create list of tasks
 //if preview

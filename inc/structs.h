@@ -170,7 +170,7 @@ typedef struct s_prop_output
 typedef struct s_render
 {
     t_mlx               mlx;
-    t_camera            *cam;
+    t_camera            cam;
     t_list              *lights;
     t_list              *objs;
     t_prop_image        prop_img;

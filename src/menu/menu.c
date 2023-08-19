@@ -41,7 +41,7 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 	exec[EX_LIST] = rt_list;
 	exec[EX_SAVE] = rt_save;
 	exec[EX_LOAD] = rt_load;
-	exec[EX_RENDER] = NULL;
+	exec[EX_RENDER] = rt_render;
 }
 
 void menu_start(t_rt *rt)

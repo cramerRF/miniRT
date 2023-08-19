@@ -88,6 +88,7 @@ void        search_obj_key(t_list *lst, t_tuple **ret, char *key);
 int 		rt_add(t_rt *rt);
 //list
 int         rt_list(t_rt *rt);
+void        print_objs(void *arg);
 //edit
 int         rt_edit(t_rt *rt);
 void        *memory(int code, void *arg);
@@ -160,5 +161,25 @@ void        free_light(t_tuple *cam);
 void        write_light(t_tuple *obj);
 t_tuple     *read_light(char *line);
 
+/* src/render */
+//init
+void    print_render(t_render *render);
+void    copy_scene_to_render(t_rt *rt, t_render *render);
+int    render_get_options(t_rt *rt, t_render **render);
+
+//add
+int    rt_render_add(t_rt *rt);
+
+//edit
+int    rt_render_edit(t_rt *rt);
+
+//free
+int    rt_render_free(t_rt *rt);
+
+//menu
+int rt_render(t_rt *rt);
+
+//update
+int    rt_render_update(t_rt *rt);
 
 #endif
