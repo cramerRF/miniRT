@@ -176,6 +176,7 @@ typedef struct s_render
     t_prop_image        prop_img;
     t_prop_performance   prop_perf;
     t_prop_output       prop_out;
+    char                *name;
 }   t_render;
 
 //RT

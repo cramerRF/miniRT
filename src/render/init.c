@@ -181,17 +181,20 @@ int    render_get_options(t_rt *rt, t_render **render)
     line = get_next_line_nl(0, 0);
     if (!line)
         return (printf("Error: empty line\n"), free(*render), 1);
+    obj = NULL;
     search_obj_key(rt->cameras, &obj, line);
-    free(line);
+    (*render)->name = line;
     if (!obj)
-        return (printf("Camera nott found\n"), free(*render), 1);
-    ft_memmove(&(*render)->cam, obj->content, sizeof(t_camera));
+        return (printf("Camera nott found\n"), free((*render)->name), free(*render), 1);
+    printf("AAAA\n");
+    ft_memmove(&((*render)->cam), obj->content, sizeof(t_camera));
+    printf("BBBB\n");
     if (get_prop_image(&(*render)->prop_img))
-        return (printf("Error: prop_image\n"), free(*render), 1);
+        return (printf("Error: prop_image\n"), free((*render)->name), free(*render), 1);
     if (get_prop_performance(&(*render)->prop_perf))
-        return (printf("Error: prop_perfomance\n"), free(*render), 1);
+        return (printf("Error: prop_perfomance\n"), free((*render)->name), free(*render), 1);
     if (get_prop_output(&(*render)->prop_out))
-        return (printf("Error: prop_output\n"), free(*render), 1);
+        return (printf("Error: prop_output\n"), free((*render)->name), free(*render), 1);
     return (0);
 }
 
@@ -259,52 +262,52 @@ void *copy_object(void *content)
     }
     else if (original->type && original->type < OBJ_AL)
     {
-           ret->type = original->type;
+        ret->type = original->type;
         ret->content = malloc(sizeof(size_mem[original->type]));
         if (!ret->content)
             return (printf("Error: mallocing \n"), free(ret), NULL);
         ft_memmove(ret->content, original->content, sizeof(size_mem[original->type]));
         if (original->type == OBJ_TRI)
         {
-            ((t_td_triangle *) ret->content)->prop = malloc(sizeof(t_td_triangle));
+            ((t_td_triangle *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_td_triangle *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
-            ft_memmove(((t_td_triangle *) ret->content)->prop, ((t_td_triangle *) original->content)->prop, sizeof(t_td_triangle));
+            ft_memmove(((t_td_triangle *) ret->content)->prop, ((t_td_triangle *) original->content)->prop, sizeof(t_obj_properties));
         }
         else if (original->type == OBJ_SPH)
         {
-            ((t_sphere *) ret->content)->prop = malloc(sizeof(t_sphere));
+            ((t_sphere *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_sphere *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
-            ft_memmove(((t_sphere *) ret->content)->prop, ((t_sphere *) original->content)->prop, sizeof(t_td_triangle));
+            ft_memmove(((t_sphere *) ret->content)->prop, ((t_sphere *) original->content)->prop, sizeof(t_obj_properties));
         }
         else if (original->type == OBJ_PLA)
         {
-            ((t_plane *) ret->content)->prop = malloc(sizeof(t_plane));
+            ((t_plane *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_plane *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
-            ft_memmove(((t_plane *) ret->content)->prop, ((t_plane *) original->content)->prop, sizeof(t_td_triangle));
+            ft_memmove(((t_plane *) ret->content)->prop, ((t_plane *) original->content)->prop, sizeof(t_obj_properties));
         }
         else if (original->type == OBJ_BOX)
         {
-            ((t_box *) ret->content)->prop = malloc(sizeof(t_box));
+            ((t_box *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_box *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
-            ft_memmove(((t_box *) ret->content)->prop, ((t_box *) original->content)->prop, sizeof(t_td_triangle));
+            ft_memmove(((t_box *) ret->content)->prop, ((t_box *) original->content)->prop, sizeof(t_obj_properties));
         }
         else if (original->type == OBJ_CIL)
         {
-            ((t_cilinder *) ret->content)->prop = malloc(sizeof(t_cilinder));
+            ((t_cilinder *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_cilinder *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
-            ft_memmove(((t_cilinder *) ret->content)->prop, ((t_cilinder *) original->content)->prop, sizeof(t_td_triangle));
+            ft_memmove(((t_cilinder *) ret->content)->prop, ((t_cilinder *) original->content)->prop, sizeof(t_obj_properties));
         }
         else if (original->type == OBJ_CON)
         {
-            ((t_cone *) ret->content)->prop = malloc(sizeof(t_cone));
+            ((t_cone *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_cone *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
-            ft_memmove(((t_cone *) ret->content)->prop, ((t_cone *) original->content)->prop, sizeof(t_td_triangle));
+            ft_memmove(((t_cone *) ret->content)->prop, ((t_cone *) original->content)->prop, sizeof(t_obj_properties));
         }
         else
             return (free(ret->content), free(ret), NULL);
