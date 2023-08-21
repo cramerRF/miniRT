@@ -123,3 +123,26 @@ t_tuple    *read_plane(char *line)
         return (printf("Error: prop parsing error\n"), ft_free_split(split), free_plane(obj), NULL);
     return (ft_free_split(split), obj);
 }
+
+void *copy_plane(void *arg)
+{
+    t_tuple *ori;
+    t_tuple *nuw;
+    t_plane *plane;
+
+    ori = arg;
+    nuw = malloc(sizeof(t_tuple));
+    if (!nuw)
+        return (printf("Error: malloc t_tuple\n"), NULL);
+    nuw->type = ori->type;
+    nuw->fixed = ori->fixed;
+    nuw->key = ft_strdup(ori->key);
+    if (!nuw->key)
+        return (printf("Error: ft_strdup\n"), free(nuw), NULL);
+    plane = malloc(sizeof(t_plane));
+    if (!nuw->key)
+        return (printf("Error: malloc t_plane\n"), free(nuw->key), free(nuw), NULL);
+    ft_memmove(plane, ori->content, sizeof(t_plane));
+    nuw->content = plane;
+    return (nuw);
+}
