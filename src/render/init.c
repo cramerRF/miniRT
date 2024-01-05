@@ -319,6 +319,7 @@ void *copy_object(void *content)
 
 void    copy_scene_to_render(t_rt *rt, t_render *render)
 {
+    render++;
     rt->lights_render = ft_lstmap(rt->lights, copy_object, free_objs);
     rt->objs_render = ft_lstmap(rt->objs, copy_object, free_objs);
 }
