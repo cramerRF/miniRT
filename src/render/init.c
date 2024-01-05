@@ -255,18 +255,18 @@ void *copy_object(void *content)
     if (original->type == OBJ_C || original->type == OBJ_LI || original->type == OBJ_AL)
     {
         ret->type = original->type;
-        ret->content = malloc(sizeof(size_mem[original->type]));
+        ret->content = malloc(size_mem[original->type]);
         if (!ret->content)
             return (printf("Error: mallocing \n"), free(ret), NULL);
-        ft_memmove(ret->content, original->content, sizeof(size_mem[original->type]));
+        ft_memmove(ret->content, original->content, size_mem[original->type]);
     }
     else if (original->type && original->type < OBJ_AL)
     {
         ret->type = original->type;
-        ret->content = malloc(sizeof(size_mem[original->type]));
+        ret->content = malloc(size_mem[original->type]);
         if (!ret->content)
             return (printf("Error: mallocing \n"), free(ret), NULL);
-        ft_memmove(ret->content, original->content, sizeof(size_mem[original->type]));
+        ft_memmove(ret->content, original->content, size_mem[original->type]);
         if (original->type == OBJ_TRI)
         {
             ((t_td_triangle *) ret->content)->prop = malloc(sizeof(t_obj_properties));
@@ -283,7 +283,7 @@ void *copy_object(void *content)
         }
         else if (original->type == OBJ_PLA)
         {
-            ((t_plane *) ret->content)->prop = malloc(sizeof(t_obj_properties));
+            ((t_plane *) ret->content)->prop = malloc(sizeof(t_obj_properties) * 2);
             if (!((t_plane *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
             ft_memmove(((t_plane *) ret->content)->prop, ((t_plane *) original->content)->prop, sizeof(t_obj_properties));
@@ -319,8 +319,8 @@ void *copy_object(void *content)
 
 void    copy_scene_to_render(t_rt *rt, t_render *render)
 {
-    render->lights = ft_lstmap(rt->lights, copy_object, free_objs);
-    render->objs = ft_lstmap(rt->objs, copy_object, free_objs);
+    rt->lights_render = ft_lstmap(rt->lights, copy_object, free_objs);
+    rt->objs_render = ft_lstmap(rt->objs, copy_object, free_objs);
 }
 
 //launch render

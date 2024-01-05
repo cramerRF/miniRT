@@ -171,10 +171,8 @@ typedef struct s_render
 {
     t_mlx               mlx;
     t_camera            cam;
-    t_list              *lights;
-    t_list              *objs;
     t_prop_image        prop_img;
-    t_prop_performance   prop_perf;
+    t_prop_performance  prop_perf;
     t_prop_output       prop_out;
     char                *name;
 }   t_render;
@@ -186,8 +184,10 @@ typedef struct s_rt
     t_list  *cameras;
     t_list  *lights;
     t_list  *objs;
-    t_list  *renders;
     char    *file;
+    t_list  *renders;
+    t_list  *lights_render;
+    t_list  *objs_render;
 }   t_rt;
 
 #endif
