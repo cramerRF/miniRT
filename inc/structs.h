@@ -133,7 +133,13 @@ typedef struct s_tuple
 
 typedef struct s_mlx
 {
+    void    *mlx;//rt->mlx
+    void    *win;
+    void    *img;
     void    *addr;
+    int     bits_per_pixel;
+    int     line_length;
+    int     endian;
 }   t_mlx;
 
 typedef struct s_prop_image
@@ -167,6 +173,24 @@ typedef struct s_prop_output
     char        *file;
 }   t_prop_output;
 
+typedef struct s_ray
+{
+    t_td_point  origin;
+    t_td_point  direction;
+} t_ray;
+
+
+typedef struct s_thread_render
+{
+    void                    *render;
+    void                    *rt;
+    pthread_t               thread;
+    int                     start;
+    int                     end;
+    void                    *rays;
+    int                     id;
+}   t_thread_render;
+
 typedef struct s_render
 {
     t_mlx               mlx;
@@ -174,6 +198,8 @@ typedef struct s_render
     t_prop_image        prop_img;
     t_prop_performance  prop_perf;
     t_prop_output       prop_out;
+    t_thread_render     *threads;
+    pthread_t           thread;
     char                *name;
 }   t_render;
 
@@ -188,6 +214,7 @@ typedef struct s_rt
     t_list  *renders;
     t_list  *lights_render;
     t_list  *objs_render;
+    void    *mlx;
 }   t_rt;
 
 #endif

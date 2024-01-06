@@ -30,7 +30,7 @@ SRC		= ./src/main.c \
 HEAD		= ./inc/miniRT.h \
 		  ./inc/structs.h
 
-LIB		= ./lib/libft/libft.a -lm
+LIB		= ./lib/libft/libft.a ./lib/minilibx_linux/libmlx.a -lm
 
 LIB_MAC = -lmlx -framework OpenGL -framework AppKit -L.
 

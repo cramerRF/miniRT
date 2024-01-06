@@ -47,6 +47,7 @@
 #  include "../lib/minilibx_macos/mlx.h"
 # endif
 /* NAME_LINUX */
+# define RT_LINUX_COMPI
 # ifdef RT_LINUX_COMPI
 #  include "../lib/minilibx_linux/mlx.h"
 #  include "../lib/minilibx_linux/mlx_int.h"
@@ -61,6 +62,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
+# include <pthread.h>
 
 /* src */
 //gnl_utils
@@ -164,7 +166,7 @@ t_tuple     *read_light(char *line);
 /* src/render */
 //init
 void    print_render(t_render *render);
-void    copy_scene_to_render(t_rt *rt, t_render *render);
+void    copy_scene_to_render(t_rt *rt);
 int    render_get_options(t_rt *rt, t_render **render);
 
 //add

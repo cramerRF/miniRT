@@ -79,6 +79,7 @@ void     default_prop_performance(t_prop_performance *perf)
 {
     perf->number_of_captures = 30;
     perf->level = 1;
+    perf->n_threads = 2;
     perf->flags[PERFORMA_O_REFRA] = 0;
     perf->flags[PERFORMA_O_DIFRA] = 0;
 }
@@ -195,7 +196,6 @@ int    render_get_options(t_rt *rt, t_render **render)
         return (printf("Error: prop_perfomance\n"), free((*render)->name), free(*render), 1);
     if (get_prop_output(&(*render)->prop_out))
         return (printf("Error: prop_output\n"), free((*render)->name), free(*render), 1);
-    ft_lstadd_back(&rt->renders, ft_lstnew(*render));
     return (0);
 }
 
@@ -222,6 +222,19 @@ void    print_render(t_render *render)
     printf("\nPrinting prop output\n");
     printf("\tformat\t%u\n", render->prop_out.format);    
     printf("\tfile\t%s\n\n", render->prop_out.file);
+    printf("\nPrinting mlx\n");
+    printf("\twin\t%p\n", render->mlx.win);
+    printf("\timg\t%p\n", render->mlx.img);
+    printf("\taddr\t%p\n", render->mlx.addr);
+    printf("\tbits_per_pixel\t%d\n", render->mlx.bits_per_pixel);
+    printf("\tline_length\t%d\n", render->mlx.line_length);
+    printf("\tendian\t%d\n", render->mlx.endian);
+    printf("\nPrinting camera\n");
+    printf("\tvertex\t%0.3f %0.3f %0.3f\n", render->cam.vertex.x, render->cam.vertex.y, render->cam.vertex.z);
+    printf("\tnormal\t%0.3f %0.3f %0.3f\n", render->cam.normal.x, render->cam.normal.y, render->cam.normal.z);
+    printf("\tfov\t%0.3f\n", render->cam.fov);
+    printf("\nPrinting name\n");
+    printf("\tname\t%s\n", render->name);
 }
 
 //Copy lights, objects and single
@@ -318,9 +331,8 @@ void *copy_object(void *content)
     return (ret);
 }
 
-void    copy_scene_to_render(t_rt *rt, t_render *render)
+void    copy_scene_to_render(t_rt *rt)
 {
-    render++;
     if (rt->lights_render)
         ft_lstclear(&rt->lights_render, free_objs);
     rt->lights_render = ft_lstmap(rt->lights, copy_object, free_objs);
