@@ -59,7 +59,7 @@ void menu_start(t_rt *rt)
 	    line = get_next_line_nl(0, 0);
 		if (!line)
 			return ;
-		printf(CLEAR_SCREEN "\n\n");
+		printf( "\n\n");
 	    cmd = get_cmd(line);
 	    if (line)
 		    free(line);

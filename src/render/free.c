@@ -1,7 +1,11 @@
 #include "../../inc/miniRT.h"
 
-int    rt_render_free(t_rt *rt)
+void    rt_render_free(void *arg)
 {
-    rt++;
-    return (0);
+    t_render    *render;
+
+    render = (t_render *) arg;
+    printf("rt_render_free %p\n", render);
+    free(render->name);
+    free(render);
 }

@@ -195,6 +195,7 @@ int    render_get_options(t_rt *rt, t_render **render)
         return (printf("Error: prop_perfomance\n"), free((*render)->name), free(*render), 1);
     if (get_prop_output(&(*render)->prop_out))
         return (printf("Error: prop_output\n"), free((*render)->name), free(*render), 1);
+    ft_lstadd_back(&rt->renders, ft_lstnew(*render));
     return (0);
 }
 

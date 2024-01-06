@@ -36,6 +36,8 @@ int		rt_exit(t_rt *rt)
 	ft_lstclear(&rt->lights_render, free_objs);
 	//free rt->objs_render
 	ft_lstclear(&rt->objs_render, free_objs);
+	//free renderers
+	ft_lstclear(&rt->renders, rt_render_free);
 	free(rt->file);
 	free(rt);
 	return (0);

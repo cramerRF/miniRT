@@ -174,7 +174,7 @@ int    rt_render_add(t_rt *rt);
 int    rt_render_edit(t_rt *rt);
 
 //free
-int    rt_render_free(t_rt *rt);
+void    rt_render_free(void *arg);
 
 //menu
 int rt_render(t_rt *rt);

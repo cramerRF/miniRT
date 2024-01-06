@@ -17,6 +17,8 @@ int rt_render(t_rt *rt)
             break ;
         else if (!ft_strncmp(line, "exit", 5))
             break ;
+        if (line)
+            free(line);
     }
     if (line)
         free(line);
