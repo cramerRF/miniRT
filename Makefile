@@ -36,12 +36,14 @@ LIB_MAC = -lmlx -framework OpenGL -framework AppKit -L.
 
 LIB_LINUX	= -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -D RT_LINUX_COMPI
 
-OBJS		= ${SRC:.c=.o}
+OBJS_AUX	= $(SRC:.c=.o)
+OBJS		= $(shell echo $(OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g')
 
 GNL		=	./lib/gnl/get_next_line_bonus.c\
 			./lib/gnl/get_next_line_utils_bonus.c
 
-GNL_OBJS = ${GNL:.c=.o}
+GNL_OBJS_AUX = ${GNL:.c=.o}
+GNL_OBJS		= $(shell echo $(GNL_OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g')
 
 CC		= cc
 
@@ -50,16 +52,16 @@ CFLAGS		= -Wall -Wextra -Werror -g3
 NAME		= miniRT
 
 .c.o:
-			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+			${CC} ${CFLAGS} -c $< -o ./objs/$(shell echo $(patsubst %.c,%.o,$<) | sed 's/\//_/g')
 
 ${NAME}:	MAC
 
-LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
+LINUX:		${OBJS_AUX} ${GNL_OBJS_AUX} ${HEAD}
 			make bonus -C ./lib/libft
 			make -C ./lib/minilibx_linux
 			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
 
-MAC:		${OBJS} ${GNL_OBJS} ${HEAD}
+MAC:		${OBJS_AUX} ${GNL_OBJS_AUX} ${HEAD}
 			make bonus -C ./lib/libft
 			make -C ./lib/minilibx_macos
 			${CC} ${CFLAGS} -D RT_MACOS_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_MAC}
