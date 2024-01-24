@@ -77,8 +77,8 @@ int    rt_render_add(t_rt *rt)
     ft_lstiter(rt->objs_render, print_objs);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     
-    compute_rays(nuw);
-    compute_image(nuw);
-    update_image(nuw);
+    //compute_rays(nuw);
+    //compute_image(nuw);
+    //update_image(nuw);
     return(0);
 }
