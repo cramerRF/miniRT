@@ -42,12 +42,14 @@
 # define MEM_READ   2
 
 # include "../lib/libft/libft.h"
+# include <pthread.h>
 /* NAME_MACOS */
+# define RT_MACOS_COMPI
 # ifdef RT_MACOS_COMPI
+#  include "../lib/minilibx_macos/mlx.h"
 #  include "../lib/minilibx_macos/mlx.h"
 # endif
 /* NAME_LINUX */
-# define RT_LINUX_COMPI
 # ifdef RT_LINUX_COMPI
 #  include "../lib/minilibx_linux/mlx.h"
 #  include "../lib/minilibx_linux/mlx_int.h"
@@ -62,7 +64,6 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
-# include <pthread.h>
 
 /* src */
 //gnl_utils

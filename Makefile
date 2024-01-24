@@ -30,11 +30,11 @@ SRC		= ./src/main.c \
 HEAD		= ./inc/miniRT.h \
 		  ./inc/structs.h
 
-LIB		= ./lib/libft/libft.a ./lib/minilibx_linux/libmlx.a -lm
+LIB		= ./lib/libft/libft.a  -lm
 
-LIB_MAC = -lmlx -framework OpenGL -framework AppKit -L.
+LIB_MAC = -lmlx -framework OpenGL -framework AppKit -L. -D RT_MACOS_COMPI
 
-LIB_LINUX	= -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -D RT_LINUX_COMPI
+LIB_LINUX	= -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -D RT_LINUX_COMPI ./lib/minilibx_linux/libmlx.a
 
 OBJS_AUX	= $(SRC:.c=.o)
 OBJS		= $(shell echo $(OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g')
@@ -73,10 +73,10 @@ clean:
 			${RM} ${OBJS} ${GNL_OBJS}
 
 fclean:		clean
+			${RM} ${NAME}
 			make fclean -C ./lib/libft
 			make clean -C ./lib/minilibx_macos
 			make clean -C ./lib/minilibx_linux
-			${RM} ${NAME}
 
 re:			fclean all
 
