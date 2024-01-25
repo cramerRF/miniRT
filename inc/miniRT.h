@@ -185,4 +185,15 @@ int rt_render(t_rt *rt);
 //update
 int    rt_render_update(t_rt *rt);
 
+/* src/3dmath */
+//utils1
+nType       absolute(nType k);
+nType       module(t_td_point v);
+t_td_point  normalize(t_td_point v);
+t_td_point  cross_product(t_td_point v, t_td_point u);
+nType       dot_product(t_td_point v, t_td_point u);
+t_td_point  scalar_product(t_td_point v, nType k);
+void        print_td_point(char *msg, t_td_point p);
+t_td_point sum_vector(t_td_point v, t_td_point u);
+
 #endif

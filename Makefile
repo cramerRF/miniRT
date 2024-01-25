@@ -24,7 +24,8 @@ SRC		= ./src/main.c \
 		./src/render/edit.c \
 		./src/render/free.c \
 		./src/render/menu.c \
-		./src/render/update.c
+		./src/render/update.c \
+		./src/3dmath/utils1.c \
 
 
 HEAD		= ./inc/miniRT.h \
@@ -76,8 +77,7 @@ fclean:		clean
 			${RM} ${NAME}
 			make fclean -C ./lib/libft
 			make clean -C ./lib/minilibx_macos
-			make clean -C ./lib/minilibx_linux
-
+			
 re:			fclean all
 
 .PHONY:	all clean fclean re

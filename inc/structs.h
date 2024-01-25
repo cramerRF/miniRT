@@ -116,7 +116,7 @@ typedef struct s_camera
 {
     t_td_point  vertex;
     t_td_point  normal;
-    nType       fov;
+    nType       fov;    
 }   t_camera;
 
 //List container
