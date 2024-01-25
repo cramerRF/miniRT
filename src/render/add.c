@@ -169,15 +169,6 @@ void compute_rays(t_render *rend)
     }
 }
 
-void    *main_render_thread(void *arg)
-{
-    t_render *rend;
-
-    rend = arg;
-    mlx_loop(rend->mlx.mlx);
-    return (NULL);
-}
-
 int    rt_render_add(t_rt *rt)
 {
     t_render    *nuw;
@@ -194,9 +185,8 @@ int    rt_render_add(t_rt *rt)
     ft_lstiter(rt->objs_render, print_objs);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     compute_rays(nuw);
-    pthread_create(&nuw->thread, NULL, main_render_thread, nuw);
-    pthread_join(nuw->thread, NULL);
     //compute_image(nuw);
     //update_image(nuw);
+    mlx_loop(nuw->mlx.mlx);
     return(0);
 }
