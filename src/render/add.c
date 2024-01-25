@@ -18,7 +18,7 @@ int rt_init_mlx(t_rt *rt, t_render *render)
     render->mlx.addr = mlx_get_data_addr(render->mlx.img, &render->mlx.bits_per_pixel, &render->mlx.line_length, &render->mlx.endian);
     if (!render->mlx.addr)
         return (free(render->mlx.win), free(render->mlx.img),printf("Error: mlx_get_data_addr\n"), 1);
-    mlx_put_image_to_window(&render->mlx, render->mlx.win, render->mlx.img, 0 ,0);
+    mlx_put_image_to_window(render->mlx.mlx, render->mlx.win, render->mlx.img, 0 ,0);
     return (0);
 }
 
@@ -169,6 +169,15 @@ void compute_rays(t_render *rend)
     }
 }
 
+void    *main_render_thread(void *arg)
+{
+    t_render *rend;
+
+    rend = arg;
+    mlx_loop(rend->mlx.mlx);
+    return (NULL);
+}
+
 int    rt_render_add(t_rt *rt)
 {
     t_render    *nuw;
@@ -185,6 +194,8 @@ int    rt_render_add(t_rt *rt)
     ft_lstiter(rt->objs_render, print_objs);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     compute_rays(nuw);
+    pthread_create(&nuw->thread, NULL, main_render_thread, nuw);
+    pthread_join(nuw->thread, NULL);
     //compute_image(nuw);
     //update_image(nuw);
     return(0);
