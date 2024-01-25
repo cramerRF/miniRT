@@ -18,6 +18,7 @@ int rt_init_mlx(t_rt *rt, t_render *render)
     render->mlx.addr = mlx_get_data_addr(render->mlx.img, &render->mlx.bits_per_pixel, &render->mlx.line_length, &render->mlx.endian);
     if (!render->mlx.addr)
         return (free(render->mlx.win), free(render->mlx.img),printf("Error: mlx_get_data_addr\n"), 1);
+    mlx_put_image_to_window(&render->mlx, render->mlx.win, render->mlx.img, 0 ,0);
     return (0);
 }
 
@@ -56,6 +57,12 @@ int malloc_thread_render(t_render *render, t_rt *rt)
             free(thread);
             return (printf("Error: malloc_thread_render rays\n"), 2);
         }
+    }
+    i =  -1;
+    while (++i < render->prop_perf.n_threads)
+    {
+        printf("thread %d, start %d, end %d, rays %p\n", \
+        thread[i].id, thread[i].start, thread[i].end, thread[i].rays);
     }
     render->threads = thread;
     return (0);
@@ -121,22 +128,43 @@ void    calculate_parameters(t_render *rend, t_td_point para[PARA_N])
     print_td_point("ORIGINdr", para[ORIGIN]);
 }
 
+void index_to_pixel(int *x, int *y, int j, t_render *rend)
+{
+    *x = j % rend->prop_img.pixel_witdh;
+    *y = j / rend->prop_img.pixel_witdh;
+}
+
+void print_vector(char *msg,  t_td_point ori, t_td_point dir)
+{
+    printf("%s: Vector((%0.4f, %0.4f, %0.4f),(%0.4f, %0.4f, %0.4f))\n", msg, ori.x, ori.y, ori.z, dir.x, dir.y, dir.z);
+}
+
 void compute_rays(t_render *rend)
 {
     unsigned int i;
-    int j;
+    int j, x, y;
     int index;
     t_td_point  para[PARA_N];
 
     calculate_parameters(rend, para);
     i = -1;
+    index = -1;
     while (++i < rend->prop_perf.n_threads)
     {
-        index = 0;
         j = rend->threads[i].start - 1;
         while (++j < rend->threads[i].end)
         {
-            ((t_ray *) (rend->threads[i].rays + index))->origin = rend->cam.vertex;
+            index_to_pixel(&x, &y, ++index, rend);
+            ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin = sum_vector(sum_vector(para[ORIGIN], scalar_product(para[D_R], x)), scalar_product(para[D_U], -y));
+            ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction = normalize(sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, scalar_product(rend->cam.vertex, -1)));
+            
+            if (j == rend->threads[i].start || j == rend->threads[i].end - 1)
+            {
+                char *aux;
+                asprintf(&aux, "\ni %d index %d, x %d, y %d", i, index, x, y);
+                print_vector(aux, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction));
+                free(aux);
+            }
         }
     }
 }
@@ -156,7 +184,6 @@ int    rt_render_add(t_rt *rt)
     ft_lstiter(rt->lights_render, print_objs);
     ft_lstiter(rt->objs_render, print_objs);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
-    
     compute_rays(nuw);
     //compute_image(nuw);
     //update_image(nuw);

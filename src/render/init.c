@@ -5,10 +5,10 @@ void    default_prop_image(t_prop_image *img)
 {
     img->far_plane = 100;
     img->near_plane = 1;
-    img->pixel_height = 1080;
-    img->pixel_witdh = 1920;
-    img->ratio[0] = 16;
-    img->ratio[1] = 9;
+    img->pixel_height = 600;
+    img->pixel_witdh = 600;
+    img->ratio[0] = 1;
+    img->ratio[1] = 1;
 }
 
 int     get_prop_image(t_prop_image *img)
@@ -235,6 +235,9 @@ void    print_render(t_render *render)
     printf("\tfov\t%0.3f\n", render->cam.fov);
     printf("\nPrinting name\n");
     printf("\tname\t%s\n", render->name);
+
+
+
 }
 
 //Copy lights, objects and single
