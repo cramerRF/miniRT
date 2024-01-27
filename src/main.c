@@ -26,7 +26,9 @@ int main(int argc, char **args)
     if (!rt)
 		return (1);
 	menu_start(rt);
+#ifdef  RT_MACOS_COMPI
+    system("leaks miniRT");
+#endif
 	printf(">>>>>>>>Shoudnt be printing this<<<<<<<<<<<\n\n");
-    system("leaks -q miniRT");
     return (0);
 }

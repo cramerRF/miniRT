@@ -19,7 +19,7 @@ int	fdf_enable_hooks(int keycode, t_render *render)
 
 int rt_loop(t_render *rend)
 {
-    if (rend->end)
+    if (rend->end == 1)
         mlx_loop_end(rend->mlx.mlx);
     return (0);
 }
@@ -187,7 +187,7 @@ void compute_rays(t_render *rend)
                 char *aux;
                 asprintf(&aux, "\ni %d index %d, x %d, y %d", i, index, x, y);
                 print_vector(aux, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction));
-                free(aux);
+free(aux);
             }
         }
     }
@@ -212,7 +212,8 @@ int    rt_render_add(t_rt *rt)
     //compute_image(nuw);
     mlx_hook(nuw->mlx.win, 2, 1L << 0, fdf_enable_hooks, nuw);
 	mlx_hook(nuw->mlx.win, 17, 1L << 0, rt_close_mlx, nuw);
-    mlx_loop_hook(nuw->mlx.addr, rt_loop, nuw);
+    mlx_loop_hook(nuw->mlx.mlx, rt_loop, nuw);
+    nuw->end = 0;
     mlx_loop(nuw->mlx.mlx);
     return(0);
 }

@@ -35,7 +35,8 @@ LIB		= ./lib/libft/libft.a  -lm
 
 LIB_MAC = -framework OpenGL -framework AppKit -L. -D RT_MACOS_COMPI ./lib/minilibx_macos/libmlx.a
 
-LIB_LINUX	= -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -D RT_LINUX_COMPI ./lib/minilibx_linux/libmlx.a
+LIB_LINUX	=  -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lz -D RT_LINUX_COMPI
+#
 
 OBJS_AUX	= $(SRC:.c=.o)
 OBJS		= $(shell echo $(OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g')
@@ -59,7 +60,7 @@ ${NAME}:	MAC
 
 LINUX:		${OBJS_AUX} ${GNL_OBJS_AUX} ${HEAD}
 			make bonus -C ./lib/libft
-			make -C ./lib/minilibx_linux
+			make re -C ./lib/minilibx_linux
 			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
 
 MAC:		${OBJS_AUX} ${GNL_OBJS_AUX} ${HEAD}
