@@ -201,6 +201,7 @@ typedef struct s_render
     t_thread_render     *threads;
     pthread_t           thread;
     char                *name;
+    char                end;
 }   t_render;
 
 //RT

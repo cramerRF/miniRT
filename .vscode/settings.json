@@ -4,6 +4,8 @@
         "struct.h": "c",
         "minirt.h": "c",
         "mlx_int.h": "c",
-        "mlx.h": "c"
+        "mlx.h": "c",
+        "algorithm": "c",
+        "setjmp.h": "c"
     }
 }

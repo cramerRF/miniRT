@@ -1,5 +1,29 @@
 #include "../../inc/miniRT.h"
 
+int rt_close_mlx(t_render *render)
+{
+    mlx_destroy_image(render->mlx.mlx, render->mlx.img);
+    render->mlx.img = NULL;
+    mlx_destroy_window(render->mlx.mlx, render->mlx.win);
+    render->mlx.win = NULL;
+    render->end = 1;
+    return (0);
+}
+
+int	fdf_enable_hooks(int keycode, t_render *render)
+{
+	printf("keycode -> %d\n", keycode);
+    render++;
+	return (1);
+}
+
+int rt_loop(t_render *rend)
+{
+    if (rend->end)
+        mlx_loop_end(rend->mlx.mlx);
+    return (0);
+}
+
 int rt_init_mlx(t_rt *rt, t_render *render)
 {
     if (!rt->mlx)
@@ -186,7 +210,9 @@ int    rt_render_add(t_rt *rt)
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     compute_rays(nuw);
     //compute_image(nuw);
-    //update_image(nuw);
+    mlx_hook(nuw->mlx.win, 2, 1L << 0, fdf_enable_hooks, nuw);
+	mlx_hook(nuw->mlx.win, 17, 1L << 0, rt_close_mlx, nuw);
+    mlx_loop_hook(nuw->mlx.addr, rt_loop, nuw);
     mlx_loop(nuw->mlx.mlx);
     return(0);
 }

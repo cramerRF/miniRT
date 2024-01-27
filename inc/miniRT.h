@@ -47,7 +47,6 @@
 # define RT_MACOS_COMPI
 # ifdef RT_MACOS_COMPI
 #  include "../lib/minilibx_macos/mlx.h"
-#  include "../lib/minilibx_macos/mlx.h"
 # endif
 /* NAME_LINUX */
 # ifdef RT_LINUX_COMPI

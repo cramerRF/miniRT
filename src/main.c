@@ -27,5 +27,6 @@ int main(int argc, char **args)
 		return (1);
 	menu_start(rt);
 	printf(">>>>>>>>Shoudnt be printing this<<<<<<<<<<<\n\n");
+    system("leaks -q miniRT");
     return (0);
 }

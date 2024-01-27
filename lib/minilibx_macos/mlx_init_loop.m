@@ -88,7 +88,6 @@ void *mlx_init()
   return ((void *)new_mlx);
 }
 
-
 void mlx_loop(mlx_ptr_t *mlx_ptr)
 {
   CFRunLoopObserverRef observer;
@@ -104,6 +103,10 @@ void mlx_loop(mlx_ptr_t *mlx_ptr)
   [NSApp run];
 }
 
+void mlx_loop_end(mlx_ptr_t *mlx_ptr)
+{
+  [NSApp stop:nil];
+}
 
 void mlx_pixel_put(mlx_ptr_t *mlx_ptr, mlx_win_list_t *win_ptr, int x, int y, int color)
 {
