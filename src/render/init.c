@@ -177,6 +177,7 @@ int    render_get_options(t_rt *rt, t_render **render)
 
     *render = malloc(sizeof(t_render));
     ft_bzero(*render, sizeof(t_render));
+    (*render)->rt = rt;
     printf("Get camera\n");
     printf("Give the identifier\n");
     line = get_next_line_nl(0, 0);

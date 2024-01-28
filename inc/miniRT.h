@@ -50,6 +50,7 @@
 # endif
 /* NAME_LINUX */
 # ifdef RT_LINUX_COMPI
+#  define _GNU_SOURCE
 #  include "../lib/minilibx_linux/mlx.h"
 #  include "../lib/minilibx_linux/mlx_int.h"
 # endif
@@ -79,7 +80,7 @@ int 		rt_is_upper(char *line);
 
 /* src/menu */
 //menu
-void        menu_start(t_rt * rt);
+void *menu_start(void *arg);
 //exit
 void        free_objs(void *obj);
 int 		rt_exit(t_rt *rt);
@@ -171,6 +172,7 @@ int    render_get_options(t_rt *rt, t_render **render);
 
 //add
 int    rt_render_add(t_rt *rt);
+int rt_loop(t_rt *rt);
 
 //edit
 int    rt_render_edit(t_rt *rt);

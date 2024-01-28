@@ -44,12 +44,14 @@ void	set_up_exec(int (*exec[EX_N])(t_rt *rt))
 	exec[EX_RENDER] = rt_render;
 }
 
-void menu_start(t_rt *rt)
+void *menu_start(void *arg)
 {
     char    *line;
     short   cmd;
     static int		(*exec_cmd[EX_N])(t_rt *rt);
+	t_rt			*rt;
 
+	rt = (t_rt *) arg;
     if (!exec_cmd[EX_EXIT])
     	set_up_exec(exec_cmd);
     while (1)
@@ -58,7 +60,7 @@ void menu_start(t_rt *rt)
 		fflush(NULL);
 	    line = get_next_line_nl(0, 0);
 		if (!line)
-			return ;
+			return (NULL);
 		printf( "\n\n");
 	    cmd = get_cmd(line);
 	    if (line)
@@ -72,4 +74,5 @@ void menu_start(t_rt *rt)
 		else if (cmd == EX_LOAD)
 			rt = *get_rt_addr(NULL);
     }
+	return (NULL);
 }

@@ -25,9 +25,19 @@ int main(int argc, char **args)
         return (help_use(), 1);
     if (!rt)
 		return (1);
-	menu_start(rt);
+    rt->mlx = mlx_init();
+    if (!rt->mlx)
+        return (printf("Error: mlx_init\n"), 1);
+    mlx_loop_hook(rt->mlx, rt_loop, rt); // Pass to main
+    
+    pthread_mutex_init(&rt->mutex, NULL);
+	//menu_start(rt);
+    pthread_create(&(rt->menu_thread), NULL, menu_start, rt);
+    mlx_loop(rt->mlx);
+    printf(">>>>>>>>Shoudnt be printing this<<<<<<<<<<<\n\n");
+    pthread_join(rt->menu_thread, NULL);
 #ifdef  RT_MACOS_COMPI
-    system("leaks miniRT");
+    //system("leaks miniRT");
 #endif
 	printf(">>>>>>>>Shoudnt be printing this<<<<<<<<<<<\n\n");
     return (0);

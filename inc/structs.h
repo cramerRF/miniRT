@@ -133,7 +133,7 @@ typedef struct s_tuple
 
 typedef struct s_mlx
 {
-    void    *mlx;//rt->mlx
+    void    *mlx;//rt->mlx pointer copy
     void    *win;
     void    *img;
     void    *addr;
@@ -202,6 +202,7 @@ typedef struct s_render
     pthread_t           thread;
     char                *name;
     char                end;
+    void                *rt;
 }   t_render;
 
 //RT
@@ -215,6 +216,10 @@ typedef struct s_rt
     t_list  *renders;
     t_list  *lights_render;
     t_list  *objs_render;
+    pthread_t   menu_thread;
+    pthread_mutex_t     mutex;
+    int     lock;
+    int     updating;
     void    *mlx;
 }   t_rt;
 

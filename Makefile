@@ -35,7 +35,7 @@ LIB		= ./lib/libft/libft.a  -lm
 
 LIB_MAC = -framework OpenGL -framework AppKit -L. -D RT_MACOS_COMPI ./lib/minilibx_macos/libmlx.a
 
-LIB_LINUX	=  -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lz -D RT_LINUX_COMPI
+LIB_LINUX	= -std=gnu99 -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lz -D RT_LINUX_COMPI
 #
 
 OBJS_AUX	= $(SRC:.c=.o)
@@ -49,7 +49,7 @@ GNL_OBJS		= $(shell echo $(GNL_OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g'
 
 CC		= cc
 
-CFLAGS		= -Wall -Wextra -Werror -g3	 #-fsanitize=address
+CFLAGS		= -Wall -Wextra -Werror -g3	 #-fsanitize=address 
 
 NAME		= miniRT
 

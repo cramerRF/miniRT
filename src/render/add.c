@@ -1,12 +1,61 @@
 #include "../../inc/miniRT.h"
 
+void    remove_from_lst(t_list **lst, void *content, void (*del)(void *))
+{
+    t_list  *tmp;
+    t_list  *prev;
+
+    tmp = *lst;
+    prev = NULL;
+    while (tmp)
+    {
+        if (tmp->content == content)
+        {
+            if (prev)
+                prev->next = tmp->next;
+            else
+                *lst = tmp->next;
+            del(tmp->content);
+            free(tmp);
+            return ;
+        }
+        prev = tmp;
+        tmp = tmp->next;
+    }
+}
+
 int rt_close_mlx(t_render *render)
 {
-    mlx_destroy_image(render->mlx.mlx, render->mlx.img);
-    render->mlx.img = NULL;
-    mlx_destroy_window(render->mlx.mlx, render->mlx.win);
-    render->mlx.win = NULL;
-    render->end = 1;
+    t_rt *rt;
+
+    rt = render->rt;
+        pthread_mutex_lock(&(rt->mutex));
+    remove_from_lst(&(rt->renders), render, rt_render_free);
+    pthread_mutex_unlock(&(rt->mutex));
+    return 0;
+}
+
+void    update_render(void*arg)
+{
+    t_render *rend;
+
+    rend = (t_render *) arg;
+    if (rend->end)
+        rt_close_mlx(rend);
+    else
+        mlx_put_image_to_window(rend->mlx.mlx, rend->mlx.win, rend->mlx.img, 0 ,0);
+}
+
+int rt_loop(t_rt *rt)
+{
+    pthread_mutex_lock(&rt->mutex);
+    rt->updating = 1;
+    pthread_mutex_unlock(&rt->mutex);
+    sleep(10);
+    pthread_mutex_lock(&rt->mutex);
+    ft_lstiter(rt->renders, update_render);
+    rt->updating = 0;
+    pthread_mutex_unlock(&rt->mutex);
     return (0);
 }
 
@@ -17,20 +66,14 @@ int	fdf_enable_hooks(int keycode, t_render *render)
 	return (1);
 }
 
-int rt_loop(t_render *rend)
-{
-    if (rend->end == 1)
-        mlx_loop_end(rend->mlx.mlx);
-    return (0);
-}
-
 int rt_init_mlx(t_rt *rt, t_render *render)
 {
-    if (!rt->mlx)
+    while (1)
     {
-        rt->mlx = mlx_init();
-        if (!rt->mlx)
-            return (printf("Error: mlx_init\n"), 1);
+        pthread_mutex_lock(&rt->mutex);
+        if (rt->updating)
+            break ;
+        pthread_mutex_unlock(&rt->mutex);
     }
     render->mlx.mlx = rt->mlx;
     render->mlx.win = mlx_new_window(rt->mlx, render->prop_img.pixel_witdh, render->prop_img.pixel_height, render->name);
@@ -43,6 +86,9 @@ int rt_init_mlx(t_rt *rt, t_render *render)
     if (!render->mlx.addr)
         return (free(render->mlx.win), free(render->mlx.img),printf("Error: mlx_get_data_addr\n"), 1);
     mlx_put_image_to_window(render->mlx.mlx, render->mlx.win, render->mlx.img, 0 ,0);
+    mlx_hook(render->mlx.win, 2, 1L << 0, fdf_enable_hooks, render);
+	mlx_hook(render->mlx.win, 17, 1L << 0, rt_close_mlx, render);
+    pthread_mutex_unlock(&rt->mutex);
     return (0);
 }
 
@@ -183,12 +229,7 @@ void compute_rays(t_render *rend)
             ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction = normalize(sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, scalar_product(rend->cam.vertex, -1)));
             
             if (j == rend->threads[i].start || j == rend->threads[i].end - 1)
-            {
-                char *aux;
-                asprintf(&aux, "\ni %d index %d, x %d, y %d", i, index, x, y);
-                print_vector(aux, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction));
-free(aux);
-            }
+                print_vector("aux", ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction));
         }
     }
 }
@@ -209,11 +250,7 @@ int    rt_render_add(t_rt *rt)
     ft_lstiter(rt->objs_render, print_objs);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     compute_rays(nuw);
-    //compute_image(nuw);
-    mlx_hook(nuw->mlx.win, 2, 1L << 0, fdf_enable_hooks, nuw);
-	mlx_hook(nuw->mlx.win, 17, 1L << 0, rt_close_mlx, nuw);
-    mlx_loop_hook(nuw->mlx.mlx, rt_loop, nuw);
-    nuw->end = 0;
-    mlx_loop(nuw->mlx.mlx);
+    //compute_image(nuw);nuw->end = 0;
+    //mlx_loop(nuw->mlx.mlx);
     return(0);
 }
