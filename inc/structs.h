@@ -227,8 +227,7 @@ typedef struct s_rt
     t_list  *objs_render;
     pthread_t   menu_thread;
     pthread_mutex_t     mutex;
-    int     lock;
-    int     updating;
+    int     end;
     void    *mlx;
 }   t_rt;
 

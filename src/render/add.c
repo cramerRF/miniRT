@@ -54,7 +54,7 @@ void    update_render(void *arg)
         mlx_put_image_to_window(rend->mlx.mlx, rend->mlx.win, rend->mlx.img, 0, 0);
         rend->status = DISPLAYED;
     }
-    else if (rend->status == END)
+    else if (0 && rend->status == END)
     {
         remove_from_lst(&(rt->renders), rend, rt_render_free);
     }
@@ -63,7 +63,39 @@ void    update_render(void *arg)
 
 int rt_loop(t_rt *rt)
 {
+    t_list  *tmp;
+    t_list  *prev;
+
     ft_lstiter(rt->renders, update_render);
+    tmp = rt->renders;
+    prev = NULL;
+    while (tmp)
+    {
+        if (((t_render *) tmp->content)->status == END)
+        {
+            if (prev)
+                prev->next = tmp->next;
+            else
+                rt->renders = tmp->next;
+            pthread_mutex_lock(&rt->mutex);
+            rt_render_free(tmp->content);
+            free(tmp);
+            pthread_mutex_unlock(&rt->mutex);
+            break ;
+        }
+        prev = tmp;
+        tmp = tmp->next;
+    }
+    pthread_mutex_lock(&rt->mutex);
+    if (rt->end)
+    {
+        pthread_join(rt->menu_thread, NULL);
+        pthread_mutex_unlock(&rt->mutex);
+        pthread_mutex_destroy(&rt->mutex);
+        free(rt);
+        exit(0);
+    }
+    pthread_mutex_unlock(&rt->mutex);
     return (0);
 }
 
@@ -247,7 +279,9 @@ int    rt_render_add(t_rt *rt)
     print_render(nuw);
     ft_lstiter(rt->lights_render, print_objs);
     ft_lstiter(rt->objs_render, print_objs);
+    pthread_mutex_lock(&rt->mutex);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
+    pthread_mutex_unlock(&rt->mutex);
     compute_rays(nuw);
     return(0);
 }

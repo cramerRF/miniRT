@@ -69,9 +69,9 @@ void *menu_start(void *arg)
 			printf("Not implemented %d\n", cmd);
 		else if (exec_cmd[cmd](rt))
 			printf("Error\n");
-		if (cmd == EX_EXIT)
+		else if (cmd == EX_EXIT)
 			break ;
-		else if (cmd == EX_LOAD)
+		if (cmd == EX_LOAD)
 			rt = *get_rt_addr(NULL);
     }
 	return (NULL);

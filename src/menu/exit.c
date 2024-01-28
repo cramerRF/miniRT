@@ -26,6 +26,13 @@ void	free_objs(void *arg)
 
 int		rt_exit(t_rt *rt)
 {
+	pthread_mutex_lock(&(rt->mutex));
+	if (rt->renders)
+	{
+		printf("rt_exit: renders still running please close all the windows\n");
+		pthread_mutex_unlock(&(rt->mutex));
+		return (1);
+	}
 	//free rt->cameras
     ft_lstclear(&rt->cameras, free_objs);
 	//free rt->lights
@@ -38,9 +45,8 @@ int		rt_exit(t_rt *rt)
 	ft_lstclear(&rt->objs_render, free_objs);
 	//free renderers
 	ft_lstclear(&rt->renders, rt_render_free);
-	if (rt->mlx)
-		free(rt->mlx);
 	free(rt->file);
-	free(rt);
+	rt->end = 1;
+	pthread_mutex_unlock(&(rt->mutex));
 	return (0);
 }

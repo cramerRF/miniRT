@@ -34,7 +34,6 @@ int main(int argc, char **args)
     pthread_create(&(rt->menu_thread), NULL, menu_start, rt);
     mlx_loop(rt->mlx);
     printf(">>>>>>>>Shoudnt be printing this<<<<<<<<<<<\n\n");
-    pthread_join(rt->menu_thread, NULL);
 #ifdef  RT_MACOS_COMPI
     //system("leaks miniRT");
 #endif
