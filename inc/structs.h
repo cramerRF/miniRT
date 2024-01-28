@@ -191,6 +191,15 @@ typedef struct s_thread_render
     int                     id;
 }   t_thread_render;
 
+enum render_status
+{
+    INIT = 0,
+    RENDERING,
+    RENDERED,
+    DISPLAYED,
+    END
+};
+
 typedef struct s_render
 {
     t_mlx               mlx;
@@ -201,7 +210,7 @@ typedef struct s_render
     t_thread_render     *threads;
     pthread_t           thread;
     char                *name;
-    char                end;
+    enum render_status  status;
     void                *rt;
 }   t_render;
 

@@ -29,7 +29,6 @@ int main(int argc, char **args)
     if (!rt->mlx)
         return (printf("Error: mlx_init\n"), 1);
     mlx_loop_hook(rt->mlx, rt_loop, rt); // Pass to main
-    
     pthread_mutex_init(&rt->mutex, NULL);
 	//menu_start(rt);
     pthread_create(&(rt->menu_thread), NULL, menu_start, rt);

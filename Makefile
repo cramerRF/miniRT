@@ -49,7 +49,7 @@ GNL_OBJS		= $(shell echo $(GNL_OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g'
 
 CC		= cc
 
-CFLAGS		= -Wall -Wextra -Werror -g3	 #-fsanitize=address 
+CFLAGS		= -Wall -Wextra -Werror -g3	-fsanitize=address 
 
 NAME		= miniRT
 

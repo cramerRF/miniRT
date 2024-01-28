@@ -185,6 +185,7 @@ int rt_render(t_rt *rt);
 
 //update
 int    rt_render_update(t_rt *rt);
+int rt_init_mlx(t_rt *rt, t_render *render);
 
 /* src/3dmath */
 //utils1

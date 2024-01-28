@@ -16,8 +16,8 @@ void    rt_render_free(void *arg)
     if (render->mlx.img)
         mlx_destroy_image(render->mlx.mlx, render->mlx.img);
     render->mlx.img = NULL;
-    if (render->mlx.win)
-        mlx_destroy_window(render->mlx.mlx, render->mlx.win);
+    //if (render->mlx.win)
+    //    mlx_destroy_window(render->mlx.mlx, render->mlx.win);
     render->mlx.win = NULL;
     free(render->name);
     free(render);
