@@ -16,11 +16,11 @@ int     get_prop_image(t_prop_image *img)
     char    *line;
 
     printf("Get_prop_image\n");
-    printf("Default config: (Y/N default N)\n");
+    printf("Default config: (Y/N default Y)\n");
     line = get_next_line_nl(0, 0);
     if (!line)
         return (printf("Error: getting line\n"), 1);
-    if (!ft_strncmp("Y", line, 2))
+    if (ft_strncmp("N", line, 2))
         return (printf("Loaded default prop image\n"), free(line), default_prop_image(img), 0);
     free(line);
     printf("Pixel_witdh:\n");
@@ -89,11 +89,11 @@ int     get_prop_performance(t_prop_performance *perf)
     char    *line;
 
     printf("Get_prop_performance\n");
-    printf("Default config: (Y/N default N)\n");
+    printf("Default config: (Y/N default Y)\n");
     line = get_next_line_nl(0, 0);
     if (!line)
         return (printf("Error: getting line\n"), 1);
-    if (!ft_strncmp("Y", line, 2))
+    if (ft_strncmp("N", line, 2))
         return (printf("Loaded default prop performance\n"), free(line), default_prop_performance(perf), 0);
     printf("Choose number of threads:\n");
     line = get_next_line_nl(0, 0);
@@ -148,11 +148,11 @@ int     get_prop_output(t_prop_output *output)
     char    *line;
 
     printf("Get_prop_output\n");
-    printf("Default config: (Y/N default N)\n");
+    printf("Default config: (Y/N default Y)\n");
     line = get_next_line_nl(0, 0);
     if (!line)
         return (printf("Error: getting line\n"), 1);
-    if (!ft_strncmp("Y", line, 2))
+    if (ft_strncmp("N", line, 2))
         return (printf("Loaded default prop output\n"), free(line), 0);
     printf("Choose format:\n\tbipmap\n\trt\n\n");
     line = get_next_line_nl(0, 0);
