@@ -98,7 +98,7 @@ t_tuple    *read_ambient_light(char *line)
     split = ft_split(line, ' ');
     if (!split)
         return (printf("Error: split failed\n"), NULL);
-    obj = add_camera();
+    obj = add_ambient_light();
     if (!obj)
         return (printf("Error: malloc obj\n"), ft_free_split(split), NULL);
     len = 0;
