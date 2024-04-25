@@ -197,7 +197,8 @@ enum render_status
     RENDERING,
     RENDERED,
     DISPLAYED,
-    END
+    END,
+    KILL
 };
 
 typedef struct s_render

@@ -25,6 +25,9 @@ SRC		= ./src/main.c \
 		./src/render/free.c \
 		./src/render/menu.c \
 		./src/render/update.c \
+		./src/render/objs/plane.c \
+		./src/render/objs/sphere.c \
+		./src/render/objs/triangle.c \
 		./src/3dmath/utils1.c \
 
 

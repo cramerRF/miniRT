@@ -30,7 +30,7 @@ int rt_cross_mlx(t_render *render)
 
     rt = render->rt;
     pthread_mutex_lock(&(rt->mutex));
-    if (render->status == DISPLAYED)
+    if (render->status == DISPLAYED || render->status == RENDERING || render->status == RENDERED)
         render->status = END;
     pthread_mutex_unlock(&(rt->mutex));
     return 0;   
@@ -47,14 +47,14 @@ void    update_render(void *arg)
     if (rend->status == INIT)
     {
         rt_init_mlx(rend->rt, rend);
-        rend->status = RENDERED;
+        rend->status = RENDERING;
     }
     else if (rend->status == RENDERED)
     {
         mlx_put_image_to_window(rend->mlx.mlx, rend->mlx.win, rend->mlx.img, 0, 0);
         rend->status = DISPLAYED;
     }
-    else if (0 && rend->status == END)
+    else if (rend->status == KILL)
     {
         remove_from_lst(&(rt->renders), rend, rt_render_free);
     }
@@ -65,13 +65,18 @@ int rt_loop(t_rt *rt)
 {
     t_list  *tmp;
     t_list  *prev;
+    int     status;
 
     ft_lstiter(rt->renders, update_render);
     tmp = rt->renders;
     prev = NULL;
     while (tmp)
     {
-        if (((t_render *) tmp->content)->status == END)
+        pthread_mutex_lock(&rt->mutex);
+        status = ((t_render *) tmp->content)->status;
+        pthread_mutex_unlock(&rt->mutex);
+
+        if (status == KILL)
         {
             if (prev)
                 prev->next = tmp->next;
@@ -285,5 +290,6 @@ int    rt_render_add(t_rt *rt)
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     pthread_mutex_unlock(&rt->mutex);
     compute_rays(nuw);
+    //Launch threads
     return(0);
 }
