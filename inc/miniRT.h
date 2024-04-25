@@ -187,6 +187,18 @@ int rt_render(t_rt *rt);
 int    rt_render_update(t_rt *rt);
 int rt_init_mlx(t_rt *rt, t_render *render);
 
+//objs/sphere.c
+int         inter_sphere(void *obj, t_ray *ray, t_td_point **arr);
+t_td_point  normal_sphere(void *obj, t_ray *ray, t_td_point *point);
+
+//objs/plane.c
+int         inter_plane(void *obj, t_ray *ray, t_td_point **arr);
+t_td_point  normal_plane(void *obj, t_ray *ray, t_td_point *point);
+
+//objs/triangle.c
+int         inter_triangle(void *obj, t_ray *ray, t_td_point **arr);
+t_td_point  normal_triangle(void *obj, t_ray *ray, t_td_point *point);
+
 /* src/3dmath */
 //utils1
 nType       absolute(nType k);
@@ -197,5 +209,7 @@ nType       dot_product(t_td_point v, t_td_point u);
 t_td_point  scalar_product(t_td_point v, nType k);
 void        print_td_point(char *msg, t_td_point p);
 t_td_point sum_vector(t_td_point v, t_td_point u);
+
+
 
 #endif

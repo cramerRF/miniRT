@@ -54,9 +54,9 @@ void    update_render(void *arg)
         mlx_put_image_to_window(rend->mlx.mlx, rend->mlx.win, rend->mlx.img, 0, 0);
         rend->status = DISPLAYED;
     }
-    else if (rend->status == KILL)
+    else if (rend->status == END)
     {
-        remove_from_lst(&(rt->renders), rend, rt_render_free);
+        //remove_from_lst(&(rt->renders), rend, rt_render_free);
     }
     pthread_mutex_unlock(&rt->mutex);
 }
@@ -76,7 +76,7 @@ int rt_loop(t_rt *rt)
         status = ((t_render *) tmp->content)->status;
         pthread_mutex_unlock(&rt->mutex);
 
-        if (status == KILL)
+        if (status == END)
         {
             if (prev)
                 prev->next = tmp->next;
@@ -98,6 +98,9 @@ int rt_loop(t_rt *rt)
         pthread_mutex_unlock(&rt->mutex);
         pthread_mutex_destroy(&rt->mutex);
         free(rt);
+        #ifdef  RT_MACOS_COMPI
+        system("leaks -q miniRT");
+        #endif
         exit(0);
     }
     pthread_mutex_unlock(&rt->mutex);
@@ -272,6 +275,110 @@ void compute_rays(t_render *rend)
     }
 }
 
+int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj)
+{
+    (void) objs;
+    (void) ray;
+    (void) hit_obj;
+    (void) hit_point;
+    return 0;
+}
+
+void    set_up_inter_ray(int 	(*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_point **arr))
+{
+    inter_ray[OBJ_NULL] = NULL;
+    inter_ray[OBJ_TRI] = inter_triangle;
+    inter_ray[OBJ_SPH] = inter_sphere;
+    inter_ray[OBJ_PLA] = inter_plane;
+    inter_ray[OBJ_BOX] = NULL;
+    inter_ray[OBJ_CIL] = NULL;
+    inter_ray[OBJ_CON] = NULL;
+    inter_ray[OBJ_AL] = NULL;
+    inter_ray[OBJ_LI] = NULL;
+    inter_ray[OBJ_C] = NULL;
+}
+
+int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj)
+{
+	static int 	    (*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_point **arr);
+    t_list          *tmp;
+    t_td_point      *arr;
+    int             n;
+
+    arr = NULL;
+    if (!objs)
+        return 0;
+    if (!inter_ray[OBJ_SPH])
+        set_up_inter_ray(inter_ray);
+    tmp = objs;
+    while (tmp)
+    {
+        n = inter_ray[((t_tuple *) tmp->content)->type]((t_tuple *) tmp->content, ray, &arr);
+        while (n--)
+        {
+            //Check closets
+            //Check direction
+            //Check sort distance
+            //Check big distance
+            *hit_point = arr[n];
+            *hit_obj = *((t_tuple *) tmp->content);
+        }
+        if (arr)
+            free(arr);
+        tmp = tmp->next;
+    }
+    return 0;
+}
+
+void    *rendered_task(void *arg)
+{
+    t_thread_render *thread;
+    t_rt            *rt;
+    t_render        *rend;
+    t_td_point      good_hit;
+    t_tuple         good_obj;
+    int             i;
+
+    thread = (t_thread_render *) arg;
+    rend = thread->render;
+    rt = rend->rt;
+    i = thread->start - 1;
+    while (++i < thread->end)
+    {
+        if (!get_hit_ray(rt->objs_render, ((t_ray *) (thread->rays + i)), &good_hit, &good_obj))
+            continue ;
+        //Color pixel
+    }
+    return (NULL);
+}
+
+void    *render_task(void *arg)
+{
+    t_rt    *rt;
+    t_render *rend;
+    unsigned int i;
+
+    
+    rend = (t_render *) arg;
+    rt = rend->rt;
+    i = -1;
+    while (++i < rend->prop_perf.n_threads)
+    {
+        printf("thread %d, start %d, end %d, rays %p\n", rend->threads[i].id, rend->threads[i].start, rend->threads[i].end, rend->threads[i].rays);
+        pthread_create(&(rend->threads[i].thread), NULL, rendered_task, rend->threads + i);
+    }
+    i = -1;
+    while (++i < rend->prop_perf.n_threads)
+    {
+        printf("thread %d, start %d, end %d, rays %p\n", rend->threads[i].id, rend->threads[i].start, rend->threads[i].end, rend->threads[i].rays);
+        pthread_join(rend->threads[i].thread, NULL);
+    }
+    pthread_mutex_lock(&rt->mutex);
+    rend->status = RENDERED;
+    pthread_mutex_unlock(&rt->mutex);
+    return (NULL);
+}
+
 int    rt_render_add(t_rt *rt)
 {
     t_render    *nuw;
@@ -290,6 +397,6 @@ int    rt_render_add(t_rt *rt)
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     pthread_mutex_unlock(&rt->mutex);
     compute_rays(nuw);
-    //Launch threads
+    pthread_create(&(nuw->thread), NULL, render_task, nuw);
     return(0);
 }
