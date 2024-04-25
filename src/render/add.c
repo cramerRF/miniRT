@@ -101,8 +101,9 @@ int rt_loop(t_rt *rt)
 
 int	fdf_enable_hooks(int keycode, t_render *render)
 {
-	printf("keycode -> %d\n", keycode);
-    render++;
+	printf("keycode -> %d %p\n", keycode, render);
+    if (keycode == 12 || keycode == 53) //ESC or q
+        rt_cross_mlx(render);
 	return (1);
 }
 
@@ -276,6 +277,7 @@ int    rt_render_add(t_rt *rt)
     if (malloc_thread_render(nuw, rt))
         return (rt_render_free(nuw), 3);
     nuw->status = INIT;
+    printf("Adding render %p\n", nuw);
     print_render(nuw);
     ft_lstiter(rt->lights_render, print_objs);
     ft_lstiter(rt->objs_render, print_objs);
