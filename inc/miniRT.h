@@ -43,7 +43,7 @@
 
 # include "../lib/libft/libft.h"
 # include <pthread.h>
-# define RT_MACOS_COMPI 1 
+# define RT_LINUX_COMPI 1 
 /* NAME_MACOS */
 # ifdef RT_MACOS_COMPI
 #  define KEY_ESC   53
@@ -52,8 +52,8 @@
 # endif
 /* NAME_LINUX */
 # ifdef RT_LINUX_COMPI
-#  define KEY_ESC   65513
-#  define KEY_Q     13
+#  define KEY_ESC   65307
+#  define KEY_Q     113
 #  define _GNU_SOURCE
 #  include "../lib/minilibx_linux/mlx.h"
 #  include "../lib/minilibx_linux/mlx_int.h"

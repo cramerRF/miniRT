@@ -13,7 +13,7 @@ void    rt_put_pixel(t_render *rend, int j, int color)
     unsigned     y;
 
     index_to_pixel((int *) &x, (int *) &y, j, rend);
-    if (x < 0 || x >= rend->prop_img.pixel_witdh || y < 0 || y >= rend->prop_img.pixel_height)
+    if (x >= rend->prop_img.pixel_witdh || y >= rend->prop_img.pixel_height)
         return ;
     dst = rend->mlx.addr + (y * rend->mlx.line_length + x * (rend->mlx.bits_per_pixel / 8));
     *(unsigned int *)dst = color;
