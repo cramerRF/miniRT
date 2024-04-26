@@ -1,5 +1,15 @@
 #include "../../inc/miniRT.h"
 
+void    rt_put_pixel(t_render *rend, unsigned x, unsigned y, int color)
+{
+    char    *dst;
+
+    if (x < 0 || x >= rend->prop_img.pixel_witdh || y < 0 || y >= rend->prop_img.pixel_height)
+        return ;
+    dst = rend->mlx.addr + (y * rend->mlx.line_length + x * (rend->mlx.bits_per_pixel / 8));
+    *(unsigned int *)dst = color;
+}
+
 void    remove_from_lst(t_list **lst, void *content, void (*del)(void *))
 {
     t_list  *tmp;
@@ -346,8 +356,11 @@ void    *rendered_task(void *arg)
     i = thread->start - 1;
     while (++i < thread->end)
     {
+        rt_put_pixel(rend, i % rend->prop_img.pixel_witdh, i / rend->prop_img.pixel_witdh, 0x00FF00);
+        continue ;
         if (!get_hit_ray(rt->objs_render, ((t_ray *) (thread->rays + i)), &good_hit, &good_obj))
             continue ;
+        
         //Color pixel
     }
     return (NULL);
