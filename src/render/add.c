@@ -362,10 +362,10 @@ void    *rendered_task(void *arg)
     i = thread->start - 1;
     while (++i < thread->end)
     {
-        if (!get_hit_ray(rt->objs_render, ((t_ray *) (thread->rays + i)), &good_hit, &good_obj))
-            continue ;
-        rt_put_pixel(rend, i, 0x00FF00);
-        
+        if (get_hit_ray(rt->objs_render, ((t_ray *) (thread->rays + i)), &good_hit, &good_obj))
+            rt_put_pixel(rend, i, 0x00FF00);
+        else
+            rt_put_pixel(rend, i, 0x000000);
         //Color pixel
     }
     return (NULL);

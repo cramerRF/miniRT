@@ -19,21 +19,16 @@ int         inter_sphere(void *obj, t_ray *ray, t_td_point **arr)
     c = dot_product(aux, aux) - sphere->radius * sphere->radius;
     dis = b * b - 4 * a * c;
     if (dis < 0)
-    {
         n = 0;
-        printf("Inter sphere zero\n");
-    }
     else if (dis == 0)
     {
         n = 1;
         (*arr)[0] = scalar_product(ray->direction, -b / (2 * a));
         (*arr)[0] = sum_vector((*arr)[0], ray->origin);
-        printf("Inter sphere one\n");
     }
     else
     {
         n = 2;
-        printf("Inter sphere two\n");
         (*arr)[0] = scalar_product(ray->direction, (-b + sqrt(dis)) / (2 * a));
         (*arr)[0] = sum_vector((*arr)[0], ray->origin);
         (*arr)[1] = scalar_product(ray->direction, (-b - sqrt(dis)) / (2 * a));
