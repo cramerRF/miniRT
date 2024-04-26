@@ -1,5 +1,4 @@
 .vscode
 *.rt
-objs
 lmlx_linux.a
 libmlx.a
