@@ -46,10 +46,14 @@
 /* NAME_MACOS */
 # define RT_MACOS_COMPI
 # ifdef RT_MACOS_COMPI
+#  define KEY_ESC   65513
+#  define KEY_Q     113
 #  include "../lib/minilibx_macos/mlx.h"
 # endif
 /* NAME_LINUX */
 # ifdef RT_LINUX_COMPI
+#  define KEY_ESC   53
+#  define KEY_Q     13
 #  define _GNU_SOURCE
 #  include "../lib/minilibx_linux/mlx.h"
 #  include "../lib/minilibx_linux/mlx_int.h"

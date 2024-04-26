@@ -67,7 +67,7 @@ ${NAME}:	MAC
 LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
 			make re -C ./lib/minilibx_linux
-			${CC} ${CFLAGS} -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
+			${CC} ${CFLAGS} -D RT_LINUX_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
 
 MAC:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft

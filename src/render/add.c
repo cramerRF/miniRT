@@ -98,9 +98,7 @@ int rt_loop(t_rt *rt)
         pthread_mutex_unlock(&rt->mutex);
         pthread_mutex_destroy(&rt->mutex);
         free(rt);
-        #ifdef  RT_MACOS_COMPI
         system("leaks -q miniRT");
-        #endif
         exit(0);
     }
     pthread_mutex_unlock(&rt->mutex);
@@ -110,8 +108,11 @@ int rt_loop(t_rt *rt)
 int	fdf_enable_hooks(int keycode, t_render *render)
 {
 	printf("keycode -> %d %p\n", keycode, render);
-    if (keycode == 12 || keycode == 53) //ESC or q
+    if (keycode == KEY_Q || keycode == KEY_ESC)
+    {
+
         rt_cross_mlx(render);
+    }
 	return (1);
 }
 
