@@ -1,9 +1,18 @@
 #include "../../inc/miniRT.h"
 
-void    rt_put_pixel(t_render *rend, unsigned x, unsigned y, int color)
+void index_to_pixel(int *x, int *y, int j, t_render *rend)
+{
+    *x = j % rend->prop_img.pixel_witdh;
+    *y = j / rend->prop_img.pixel_witdh;
+}
+
+void    rt_put_pixel(t_render *rend, int j, int color)
 {
     char    *dst;
+    unsigned     x;
+    unsigned     y;
 
+    index_to_pixel((int *) &x, (int *) &y, j, rend);
     if (x < 0 || x >= rend->prop_img.pixel_witdh || y < 0 || y >= rend->prop_img.pixel_height)
         return ;
     dst = rend->mlx.addr + (y * rend->mlx.line_length + x * (rend->mlx.bits_per_pixel / 8));
@@ -250,12 +259,6 @@ void    calculate_parameters(t_render *rend, t_td_point para[PARA_N])
     print_td_point("ORIGINdr", para[ORIGIN]);
 }
 
-void index_to_pixel(int *x, int *y, int j, t_render *rend)
-{
-    *x = j % rend->prop_img.pixel_witdh;
-    *y = j / rend->prop_img.pixel_witdh;
-}
-
 void print_vector(char *msg,  t_td_point ori, t_td_point dir)
 {
     printf("%s: Vector((%0.4f, %0.4f, %0.4f),(%0.4f, %0.4f, %0.4f))\n", msg, ori.x, ori.y, ori.z, dir.x, dir.y, dir.z);
@@ -315,18 +318,21 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
     t_list          *tmp;
     t_td_point      *arr;
     int             n;
+    int             status;
 
     arr = NULL;
     if (!objs)
         return 0;
     if (!inter_ray[OBJ_SPH])
         set_up_inter_ray(inter_ray);
+    status = 0;
     tmp = objs;
     while (tmp)
     {
         n = inter_ray[((t_tuple *) tmp->content)->type]((t_tuple *) tmp->content, ray, &arr);
         while (n--)
         {
+            status = 1;
             //Check closets
             //Check direction
             //Check sort distance
@@ -338,7 +344,7 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
             free(arr);
         tmp = tmp->next;
     }
-    return 0;
+    return status;
 }
 
 void    *rendered_task(void *arg)
@@ -356,10 +362,9 @@ void    *rendered_task(void *arg)
     i = thread->start - 1;
     while (++i < thread->end)
     {
-        rt_put_pixel(rend, i % rend->prop_img.pixel_witdh, i / rend->prop_img.pixel_witdh, 0x00FF00);
-        continue ;
         if (!get_hit_ray(rt->objs_render, ((t_ray *) (thread->rays + i)), &good_hit, &good_obj))
             continue ;
+        rt_put_pixel(rend, i, 0x00FF00);
         
         //Color pixel
     }
@@ -375,6 +380,18 @@ void    *render_task(void *arg)
     
     rend = (t_render *) arg;
     rt = rend->rt;
+    while (1)
+    {
+        pthread_mutex_lock(&rt->mutex);
+        if (rend->status == RENDERING)
+        {
+            pthread_mutex_unlock(&rt->mutex);
+            break ;
+        }
+        pthread_mutex_unlock(&rt->mutex);
+        usleep(1000);
+    }
+
     i = -1;
     while (++i < rend->prop_perf.n_threads)
     {
