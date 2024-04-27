@@ -64,6 +64,9 @@ int 		rt_add(t_rt *rt)
     //Check fixed
     nuw->key = line;
     *flag = rt_check_fixed_identifier(rt, nuw->key, nuw->type);
+    				printf("(obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) = %s\n", (nuw->fixed && TestBit(flag, CHECK_EXISTS_TYPE)) ? "true" : "false");
+				printf("TestBit(flag, CHECK_FIX) = %s\n", TestBit(flag, CHECK_FIX) ? "true" : "false");
+				printf("TestBit(flag, CHECK_KEY) = %s\n", TestBit(flag, CHECK_KEY) ? "true" : "false");
     if ((nuw->fixed && TestBit(flag, CHECK_EXISTS_TYPE)) || TestBit(flag, CHECK_FIX) || TestBit(flag, CHECK_KEY))
         return(free_objs(nuw), printf("Error concurrency\n"), 1);
     lst = ft_lstnew(nuw);

@@ -9,16 +9,25 @@ int         inter_sphere(void *obj, t_ray *ray, t_td_point **arr)
     nType       dis;
     t_td_point  aux;
     int         n;
+    static char flag;
 
     //Max sols = 2
     *arr = malloc(sizeof(t_td_point) * 2);
-    sphere = (t_sphere *)obj;
+    sphere = ((t_tuple *) obj)->content;
     a = dot_product(ray->direction, ray->direction);
     aux = sum_vector(ray->origin, scalar_product(sphere->center, -1));
     b = 2 * dot_product(ray->direction, aux);
     c = dot_product(aux, aux) - sphere->radius * sphere->radius;
     dis = b * b - 4 * a * c;
-    if (dis < 0)
+    if (!flag)
+    {
+        flag = 1;
+        printf("Ray ori %0.2f %0.2f %0.2f\n", ray->origin.x, ray->origin.y, ray->origin.z);
+        printf("Ray dir %0.2f %0.2f %0.2f\n", ray->direction.x, ray->direction.y, ray->direction.z);
+        //printf("A dir %0.2f %0.2f %0.2f\n", (*arr)[0].x, (*arr)[0].y, (*arr)[0].z);
+        //printf("B dir %0.2f %0.2f %0.2f\n", (*arr)[1].x, (*arr)[1].y, (*arr)[1].z);
+
+    }    if (dis < 0)
         n = 0;
     else if (dis == 0)
     {
@@ -28,11 +37,13 @@ int         inter_sphere(void *obj, t_ray *ray, t_td_point **arr)
     }
     else
     {
+
         n = 2;
         (*arr)[0] = scalar_product(ray->direction, (-b + sqrt(dis)) / (2 * a));
         (*arr)[0] = sum_vector((*arr)[0], ray->origin);
         (*arr)[1] = scalar_product(ray->direction, (-b - sqrt(dis)) / (2 * a));
         (*arr)[1] = sum_vector((*arr)[1], ray->origin);
+
     }
     return (n);
 }

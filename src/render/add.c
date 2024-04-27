@@ -49,7 +49,8 @@ int rt_cross_mlx(t_render *render)
 
     rt = render->rt;
     pthread_mutex_lock(&(rt->mutex));
-    if (render->status == DISPLAYED || render->status == RENDERING || render->status == RENDERED)
+    // || render->status == RENDERING || render->status == RENDERED)
+    if (render->status == DISPLAYED)
         render->status = END;
     pthread_mutex_unlock(&(rt->mutex));
     return 0;   
@@ -114,11 +115,11 @@ int rt_loop(t_rt *rt)
     if (rt->end)
     {
         pthread_join(rt->menu_thread, NULL);
+        exit(0);
         pthread_mutex_unlock(&rt->mutex);
         pthread_mutex_destroy(&rt->mutex);
         free(rt);
         system("leaks -q miniRT");
-        exit(0);
     }
     pthread_mutex_unlock(&rt->mutex);
     return (0);
@@ -160,9 +161,11 @@ int malloc_thread_render(t_render *render, t_rt *rt)
     int rays_n;
 
     rays_n = render->prop_img.pixel_witdh * render->prop_img.pixel_height / render->prop_perf.n_threads;
+    printf("rays_n %d\n", rays_n);
     thread = malloc(sizeof(t_thread_render) * render->prop_perf.n_threads);
     if (!thread)
         return (printf("Error: malloc_thread_render\n"), 1);
+    ft_bzero(thread, sizeof(t_thread_render) * render->prop_perf.n_threads);
     i = -1;
     while (++i < render->prop_perf.n_threads)
     {
@@ -171,13 +174,15 @@ int malloc_thread_render(t_render *render, t_rt *rt)
         thread[i].id = i;
         if (i == render->prop_perf.n_threads - 1)
         {
-            thread[i].rays = malloc(sizeof(t_ray) * (rays_n + render->prop_img.pixel_witdh * render->prop_img.pixel_height % render->prop_perf.n_threads));
+            thread[i].rays = malloc(sizeof(t_ray) * (rays_n + ((render->prop_img.pixel_witdh * render->prop_img.pixel_height) % render->prop_perf.n_threads)));
+            ft_bzero(thread[i].rays, sizeof(t_ray) * (rays_n + ((render->prop_img.pixel_witdh * render->prop_img.pixel_height) % render->prop_perf.n_threads)));
             thread[i].end = render->prop_img.pixel_witdh * render->prop_img.pixel_height;
             thread[i].start = i * rays_n;
         }
         else
         {
             thread[i].rays = malloc(sizeof(t_ray) * rays_n);
+            ft_bzero(thread[i].rays, sizeof(t_ray) * rays_n);
             thread[i].end = (i + 1) * rays_n;
             thread[i].start = i * rays_n;
         }
@@ -186,6 +191,7 @@ int malloc_thread_render(t_render *render, t_rt *rt)
             while (--i + 1 > 0)
                 free(thread[i].rays);
             free(thread);
+            exit(18);
             return (printf("Error: malloc_thread_render rays\n"), 2);
         }
     }
@@ -264,6 +270,37 @@ void print_vector(char *msg,  t_td_point ori, t_td_point dir)
     printf("%s: Vector((%0.4f, %0.4f, %0.4f),(%0.4f, %0.4f, %0.4f))\n", msg, ori.x, ori.y, ori.z, dir.x, dir.y, dir.z);
 }
 
+
+void compute_rays_copy(t_render *rend)
+{
+    unsigned int i;
+    int j, x, y;
+    int index;
+    t_td_point  para[PARA_N];
+
+    calculate_parameters(rend, para);
+    i = -1;
+    index = -1;
+    while (++i < rend->prop_perf.n_threads)
+    {
+        //printf("COSO %p\n", rend->threads[i].rays);
+        j = rend->threads[i].start - 1;
+        while (++j < rend->threads[i].end)
+        {
+            index_to_pixel(&x, &y, ++index, rend);
+            (((t_ray *) rend->threads[i].rays) + j - rend->threads[i].start)->origin = sum_vector(sum_vector(para[ORIGIN], scalar_product(para[D_R], x)), scalar_product(para[D_U], -y));
+            (((t_ray *) rend->threads[i].rays) + j - rend->threads[i].start)->direction = normalize(sum_vector(((t_ray *) (((t_ray *) rend->threads[i].rays) + j - rend->threads[i].start))->origin, scalar_product(rend->cam.vertex, -1)));
+            //printf("ray %d, %d, %d\n", j, x, y);
+            //printf("ray %p ray->origin %0.4f, %0.4f, %0.4f\n", ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin.x, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin.y, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin.z);
+            //printf("ray->direction %0.4f, %0.4f, %0.4f\n", ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction.x, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction.y, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction.z);
+            if (j == rend->threads[i].start || j == rend->threads[i].end - 1)
+                print_vector("aux", (((t_ray *) rend->threads[i].rays) + j - rend->threads[i].start)->origin, sum_vector((((t_ray *) rend->threads[i].rays) + j - rend->threads[i].start)->origin, (((t_ray *) rend->threads[i].rays) + j - rend->threads[i].start)->direction));
+        }
+    }
+}
+
+
+
 void compute_rays(t_render *rend)
 {
     unsigned int i;
@@ -283,8 +320,13 @@ void compute_rays(t_render *rend)
             ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin = sum_vector(sum_vector(para[ORIGIN], scalar_product(para[D_R], x)), scalar_product(para[D_U], -y));
             ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction = normalize(sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, scalar_product(rend->cam.vertex, -1)));
             
-            if (j == rend->threads[i].start || j == rend->threads[i].end - 1)
+            if (j == rend->threads[i].start || j == rend->threads[i].end - 1 || !(j % 10000))
+            {
+                printf("j %d, x %d, y %d\n", j, x, y);
+                printf("addr %p\n", rend->threads[i].rays + j - rend->threads[i].start);
                 print_vector("aux", ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction));
+
+            }
         }
     }
 }
@@ -355,6 +397,7 @@ void    *rendered_task(void *arg)
     t_td_point      good_hit;
     t_tuple         good_obj;
     int             i;
+    t_ray           *ray;
 
     thread = (t_thread_render *) arg;
     rend = thread->render;
@@ -362,7 +405,9 @@ void    *rendered_task(void *arg)
     i = thread->start - 1;
     while (++i < thread->end)
     {
-        if (get_hit_ray(rt->objs_render, ((t_ray *) (thread->rays + i)), &good_hit, &good_obj))
+        ray = (((t_ray *) thread->rays) + i - thread->start);
+        //print_vector("ray", ray->origin, sum_vector(ray->origin, ray->direction));
+        if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj))
             rt_put_pixel(rend, i, 0x00FF00);
         else
             rt_put_pixel(rend, i, 0x000000);
@@ -410,6 +455,31 @@ void    *render_task(void *arg)
     return (NULL);
 }
 
+
+void print_rays(t_render *rend)
+{
+    unsigned int i;
+    int j, x, y;
+    int index;
+
+    i = -1;
+    index = -1;
+    while (++i < rend->prop_perf.n_threads)
+    {
+        j = rend->threads[i].start - 1;
+        while (++j < rend->threads[i].end)
+        {
+            index_to_pixel(&x, &y, ++index, rend);
+            if (j == rend->threads[i].start || j == rend->threads[i].end - 1 || !(j % 10000))
+            {
+                printf("j %d, x %d, y %d\n", j, x, y);
+                printf("addr %p\n", rend->threads[i].rays + j - rend->threads[i].start);
+                print_vector("au2x", ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, sum_vector(((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->origin, ((t_ray *) (rend->threads[i].rays + j - rend->threads[i].start))->direction));
+            }
+        }
+    }
+}
+
 int    rt_render_add(t_rt *rt)
 {
     t_render    *nuw;
@@ -422,12 +492,13 @@ int    rt_render_add(t_rt *rt)
     nuw->status = INIT;
     printf("Adding render %p\n", nuw);
     print_render(nuw);
-    ft_lstiter(rt->lights_render, print_objs);
+    //ft_lstiter(rt->lights_render, print_objs);
     ft_lstiter(rt->objs_render, print_objs);
+    compute_rays_copy(nuw);
+    //print_rays(nuw);
+    pthread_create(&(nuw->thread), NULL, render_task, nuw);
     pthread_mutex_lock(&rt->mutex);
     ft_lstadd_back(&rt->renders, ft_lstnew(nuw));
     pthread_mutex_unlock(&rt->mutex);
-    compute_rays(nuw);
-    pthread_create(&(nuw->thread), NULL, render_task, nuw);
     return(0);
 }

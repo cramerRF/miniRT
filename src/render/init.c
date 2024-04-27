@@ -176,6 +176,7 @@ int    render_get_options(t_rt *rt, t_render **render)
     char        *line;
 
     *render = malloc(sizeof(t_render));
+    printf("Malloc render %p\n", *render);
     ft_bzero(*render, sizeof(t_render));
     (*render)->rt = rt;
     printf("Get camera\n");
