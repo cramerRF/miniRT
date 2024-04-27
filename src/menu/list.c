@@ -27,11 +27,11 @@ int rt_list(t_rt *rt)
 {
     printf("rt_list %p\n", rt);
     printf("Listing cameras---------------------------\n\n");
-    ft_lstiter(rt->cameras, print_objs);
+    //ft_lstiter(rt->cameras, print_objs);
     printf("Listing lights----------------------------\n\n");
-    ft_lstiter(rt->lights, print_objs);
+    //ft_lstiter(rt->lights, print_objs);
     printf("Listing objs------------------------------\n\n");
-    ft_lstiter(rt->objs, print_objs);
+    //ft_lstiter(rt->objs, print_objs);
     printf("------------------------------------------\n");
     return (0);
 }

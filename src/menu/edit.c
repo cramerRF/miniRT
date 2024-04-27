@@ -54,7 +54,6 @@ static void    check_fixed_identifier(t_list *lst, char *key,int type, int flags
 
     while (lst)
     {
-        printf("Checking\n");
         obj = lst->content;
         if (obj->type == type)
         {
@@ -83,8 +82,8 @@ int    rt_check_fixed_identifier(t_rt *rt, char *key, int type)
         printf("Error: identifier already in use\n");
     if (flags[CHECK_FIX])
         printf("Error: object type fixed\n");
-    if (flags[CHECK_EXISTS_TYPE])
-        printf("Warning: multiple objs types\n");
+    //if (flags[CHECK_EXISTS_TYPE])
+    //    printf("Warning: multiple objs types\n");
     flag[0] = 0;
     if (flags[CHECK_KEY])
         SetBit(((int *) flag), (CHECK_KEY));

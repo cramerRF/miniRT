@@ -8,9 +8,9 @@ int		rt_is_upper(char *line)
 	while (line[++i])
 	{
 		if (line[i] < 'A' || line[i] > 'Z')
-			return (printf("rt_is_upper(%s) = 0\n", line), 0);
+			return (0);
 	}
-	return (printf("rt_is_upper(%s) = 1\n", line), 1);
+	return (1);
 }
 
 static int		get_obj_type(char *line)
@@ -81,9 +81,9 @@ static int		read_rt_file(t_rt *rt)
 				int	flags[1];
 
 				*flags = rt_check_fixed_identifier(rt, obj->key, obj->type);
-				printf("(obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) = %s\n", (obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) ? "true" : "false");
-				printf("TestBit(flags, CHECK_FIX) = %s\n", TestBit(flags, CHECK_FIX) ? "true" : "false");
-				printf("TestBit(flags, CHECK_KEY) = %s\n", TestBit(flags, CHECK_KEY) ? "true" : "false");
+//				printf("(obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) = %s\n", (obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) ? "true" : "false");
+//				printf("TestBit(flags, CHECK_FIX) = %s\n", TestBit(flags, CHECK_FIX) ? "true" : "false");
+//				printf("TestBit(flags, CHECK_KEY) = %s\n", TestBit(flags, CHECK_KEY) ? "true" : "false");
 				if ((obj->fixed && TestBit(flags, CHECK_EXISTS_TYPE)) || TestBit(flags, CHECK_FIX) || TestBit(flags, CHECK_KEY))
     			    return(free_objs(obj), printf("Error concurrency\n"), 1);
 				lst = ft_lstnew(obj);

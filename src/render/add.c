@@ -389,6 +389,17 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
     return status;
 }
 
+t_obj_properties *get_props_from_tuple(t_tuple *tuple)
+{
+    if (tuple->type == OBJ_SPH)
+        return (((t_sphere *) tuple->content)->prop);
+    if (tuple->type == OBJ_PLA)
+        return (((t_plane *) tuple->content)->prop);
+    if (tuple->type == OBJ_TRI)
+        return (((t_td_triangle *) tuple->content)->prop);
+    return NULL;
+}
+
 void    *rendered_task(void *arg)
 {
     t_thread_render *thread;
@@ -408,10 +419,10 @@ void    *rendered_task(void *arg)
         ray = (((t_ray *) thread->rays) + i - thread->start);
         //print_vector("ray", ray->origin, sum_vector(ray->origin, ray->direction));
         if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj))
-            rt_put_pixel(rend, i, 0x00FF00);
+            rt_put_pixel(rend, i, get_props_from_tuple(&good_obj)->color[0] << 16 | get_props_from_tuple(&good_obj)->color[1] << 8 | get_props_from_tuple(&good_obj)->color[2]);
         else
             rt_put_pixel(rend, i, 0x000000);
-        //Color pixel
+        //Color pixel0x00FF00
     }
     return (NULL);
 }
@@ -493,7 +504,7 @@ int    rt_render_add(t_rt *rt)
     printf("Adding render %p\n", nuw);
     print_render(nuw);
     //ft_lstiter(rt->lights_render, print_objs);
-    ft_lstiter(rt->objs_render, print_objs);
+    //ft_lstiter(rt->objs_render, print_objs);
     compute_rays_copy(nuw);
     //print_rays(nuw);
     pthread_create(&(nuw->thread), NULL, render_task, nuw);
