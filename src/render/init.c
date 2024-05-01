@@ -302,7 +302,7 @@ void *copy_object(void *content)
         }
         else if (original->type == OBJ_PLA)
         {
-            ((t_plane *) ret->content)->prop = malloc(sizeof(t_obj_properties) * 2);
+            ((t_plane *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_plane *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
             ft_memmove(((t_plane *) ret->content)->prop, ((t_plane *) original->content)->prop, sizeof(t_obj_properties));

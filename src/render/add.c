@@ -361,6 +361,7 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
     t_td_point      *arr;
     int             n;
     int             status;
+    nType           min = +INFINITY;
 
     arr = NULL;
     if (!objs)
@@ -375,15 +376,23 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
         while (n--)
         {
             status = 1;
-            //Check closets
             //Check direction
+            if (dot_product(ray->direction, normalize(sum_vector(arr[n], scalar_product(ray->origin, -1)))) < 0)
+                continue ;
+            //Check closets
+            if (distance(ray->origin, arr[n]) > min)
+                continue ;
             //Check sort distance
             //Check big distance
+            min = distance(ray->origin, arr[n]);
             *hit_point = arr[n];
             *hit_obj = *((t_tuple *) tmp->content);
         }
         if (arr)
+        {
             free(arr);
+            arr = NULL;
+        }
         tmp = tmp->next;
     }
     return status;
@@ -391,6 +400,13 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
 
 t_obj_properties *get_props_from_tuple(t_tuple *tuple)
 {
+    if (!tuple ||\
+     !tuple->content ||\
+      !tuple->type)
+    {
+        printf("Error: get_props_from_tuple %p\n", tuple);
+        exit(1);
+    }
     if (tuple->type == OBJ_SPH)
         return (((t_sphere *) tuple->content)->prop);
     if (tuple->type == OBJ_PLA)

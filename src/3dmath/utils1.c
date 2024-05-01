@@ -7,6 +7,11 @@ nType   absolute(nType k)
     return (k);
 }
 
+nType  distance(t_td_point a, t_td_point b)
+{
+    return (sqrt((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z)));
+}
+
 nType  module(t_td_point v)
 {
     return (sqrt(v.x * v.x + v.y * v.y +v.z * v.z));

@@ -36,9 +36,9 @@ static int		get_obj_type(char *line)
 static void	setup_parser(t_tuple 	*(*parser[OBJ_N])(char *))
 {
 	parser[OBJ_NULL] = NULL;
-	parser[OBJ_TRI] = NULL;
+	parser[OBJ_TRI] = read_triangle;
 	parser[OBJ_SPH] = read_sphere;
-	parser[OBJ_PLA] = NULL;
+	parser[OBJ_PLA] = read_plane;
 	parser[OBJ_BOX] = NULL;
 	parser[OBJ_CIL] = NULL;
 	parser[OBJ_CON] = NULL;

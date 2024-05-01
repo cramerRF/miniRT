@@ -113,7 +113,7 @@ t_tuple    *read_triangle(char *line)
     len = 0;
     while (split[len])
         len++;
-    if (len != 5)
+    if (len != 6)
         return (printf("Error: split size\n"), ft_free_split(split), free_triangle(obj), NULL);
     if (rt_is_upper(split[0]) && printf("Fixed object\n"))
         obj->fixed = 1;

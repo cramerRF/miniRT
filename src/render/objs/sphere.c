@@ -9,7 +9,6 @@ int         inter_sphere(void *obj, t_ray *ray, t_td_point **arr)
     nType       dis;
     t_td_point  aux;
     int         n;
-    static char flag;
 
     //Max sols = 2
     *arr = malloc(sizeof(t_td_point) * 2);
@@ -19,15 +18,7 @@ int         inter_sphere(void *obj, t_ray *ray, t_td_point **arr)
     b = 2 * dot_product(ray->direction, aux);
     c = dot_product(aux, aux) - sphere->radius * sphere->radius;
     dis = b * b - 4 * a * c;
-    if (!flag)
-    {
-        flag = 1;
-        printf("Ray ori %0.2f %0.2f %0.2f\n", ray->origin.x, ray->origin.y, ray->origin.z);
-        printf("Ray dir %0.2f %0.2f %0.2f\n", ray->direction.x, ray->direction.y, ray->direction.z);
-        //printf("A dir %0.2f %0.2f %0.2f\n", (*arr)[0].x, (*arr)[0].y, (*arr)[0].z);
-        //printf("B dir %0.2f %0.2f %0.2f\n", (*arr)[1].x, (*arr)[1].y, (*arr)[1].z);
-
-    }    if (dis < 0)
+    if (dis < 0)
         n = 0;
     else if (dis == 0)
     {

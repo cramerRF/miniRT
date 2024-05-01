@@ -205,6 +205,7 @@ t_td_point  normal_triangle(void *obj, t_ray *ray, t_td_point *point);
 
 /* src/3dmath */
 //utils1
+nType       distance(t_td_point a, t_td_point b);
 nType       absolute(nType k);
 nType       module(t_td_point v);
 t_td_point  normalize(t_td_point v);
