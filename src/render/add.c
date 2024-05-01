@@ -354,7 +354,7 @@ void    set_up_inter_ray(int 	(*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_po
     inter_ray[OBJ_C] = NULL;
 }
 
-int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj)
+int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_render *render)
 {
 	static int 	    (*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_point **arr);
     t_list          *tmp;
@@ -362,6 +362,7 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
     int             n;
     int             status;
     nType           min = +INFINITY;
+    nType           ac_distance;
 
     arr = NULL;
     if (!objs)
@@ -375,18 +376,23 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
         n = inter_ray[((t_tuple *) tmp->content)->type]((t_tuple *) tmp->content, ray, &arr);
         while (n--)
         {
-            status = 1;
             //Check direction
             if (dot_product(ray->direction, normalize(sum_vector(arr[n], scalar_product(ray->origin, -1)))) < 0)
                 continue ;
             //Check closets
-            if (distance(ray->origin, arr[n]) > min)
+            ac_distance = distance(ray->origin, arr[n]);
+            if (ac_distance > min)
                 continue ;
             //Check sort distance
+            if (ac_distance < render->prop_img.near_plane)
+                continue ;
             //Check big distance
-            min = distance(ray->origin, arr[n]);
+            if (ac_distance > render->prop_img.far_plane)
+                continue ;
+            min = ac_distance;
             *hit_point = arr[n];
             *hit_obj = *((t_tuple *) tmp->content);
+            status = 1;
         }
         if (arr)
         {
@@ -400,12 +406,20 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
 
 t_obj_properties *get_props_from_tuple(t_tuple *tuple)
 {
-    if (!tuple ||\
-     !tuple->content ||\
-      !tuple->type)
+    if (!tuple)
     {
-        printf("Error: get_props_from_tuple %p\n", tuple);
+        printf("Error1: get_props_from_tuple %p\n", tuple);
         exit(1);
+    }
+    if (!tuple->content)
+    {
+        printf("Error2: get_props_from_tuple %p %p\n", tuple, tuple->content);
+        exit(2);
+    }
+    if (!tuple->type)
+    {
+        printf("Error3: get_props_from_tuple %s\n", tuple->key);
+        exit(3);
     }
     if (tuple->type == OBJ_SPH)
         return (((t_sphere *) tuple->content)->prop);
@@ -434,7 +448,7 @@ void    *rendered_task(void *arg)
     {
         ray = (((t_ray *) thread->rays) + i - thread->start);
         //print_vector("ray", ray->origin, sum_vector(ray->origin, ray->direction));
-        if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj))
+        if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj, rend))
             rt_put_pixel(rend, i, get_props_from_tuple(&good_obj)->color[0] << 16 | get_props_from_tuple(&good_obj)->color[1] << 8 | get_props_from_tuple(&good_obj)->color[2]);
         else
             rt_put_pixel(rend, i, 0x000000);

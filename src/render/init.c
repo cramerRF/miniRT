@@ -305,7 +305,13 @@ void *copy_object(void *content)
             ((t_plane *) ret->content)->prop = malloc(sizeof(t_obj_properties));
             if (!((t_plane *) ret->content)->prop)
                 return (free(ret->content), free(ret), NULL);
+            printf("copying original tuple %p\n", original);
+            printf("copying original plane %p\n", ((t_plane *) original->content));
+            printf("copying original prop %p\n", ((t_plane *) original->content)->prop);
             ft_memmove(((t_plane *) ret->content)->prop, ((t_plane *) original->content)->prop, sizeof(t_obj_properties));
+            printf("copying ret tuple %p\n", ret);
+            printf("copying ret plane %p\n", ((t_plane *) ret->content));
+            printf("copying ret prop %p\n", ((t_plane *) ret->content)->prop);
         }
         else if (original->type == OBJ_BOX)
         {
