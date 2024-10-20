@@ -1,6 +1,8 @@
 import random
 from datetime import datetime
 cu = datetime.now()
+with open("/dev/random", "rb") as f:
+    cu = f.read(10)
 
 x_max = 20
 y_max = 10
@@ -27,6 +29,7 @@ elif obj_type == "tr":
 else:
     print("Invalid object type")
     exit()
+
 random.seed(cu)
 
 
@@ -38,7 +41,7 @@ def gen_sp():
     c_r = int(random.random() * 255)
     c_g = int(random.random() * 255)
     c_b = int(random.random() * 255)
-    return "sp sq" + str(i) + " " + str(p_x) + "," + str(p_y) + "," + str(p_z) + " " + str(r) + " " + str(c_r) + "," + str(c_g) + "," + str(c_b) + "_1_1_1"
+    return "sp sq" + str(i) + "-" + str(random.random()) + " " + str(p_x) + "," + str(p_y) + "," + str(p_z) + " " + str(r) + " " + str(c_r) + "," + str(c_g) + "," + str(c_b) + "_1_1_1"
 
 def gen_pl():
     p_x = random.random() * (x_max - x_min) + x_min
@@ -50,7 +53,7 @@ def gen_pl():
     c_r = int(random.random() * 255)
     c_g = int(random.random() * 255)
     c_b = int(random.random() * 255)
-    return "pl pl" + str(i) + " " + str(p_x) + "," + str(p_y) + "," + str(p_z) + " " + str(n_x) + "," + str(n_y) + "," + str(n_z) + " " + str(c_r) + "," + str(c_g) + "," + str(c_b) + "_1_1_1"
+    return "pl pl" + str(i) + "-" + str(random.random()) + " " + str(p_x) + "," + str(p_y) + "," + str(p_z) + " " + str(n_x) + "," + str(n_y) + "," + str(n_z) + " " + str(c_r) + "," + str(c_g) + "," + str(c_b) + "_1_1_1"
 
 def gen_tr():
     p1_x = random.random() * (x_max - x_min) + x_min
@@ -67,7 +70,7 @@ def gen_tr():
     c_r = int(random.random() * 255)
     c_g = int(random.random() * 255)
     c_b = int(random.random() * 255)
-    return "tr tr" + str(i) + " " + str(p1_x) + "," + str(p1_y) + "," + str(p1_z) + " " + str(p2_x) + "," + str(p2_y) + "," + str(p2_z) + " " + str(p3_x) + "," + str(p3_y) + "," + str(p3_z) + " " + str(c_r) + "," + str(c_g) + "," + str(c_b) + "_1_1_1"
+    return "tr tr" + str(i) + "-" + str(random.random()) + " " + str(p1_x) + "," + str(p1_y) + "," + str(p1_z) + " " + str(p2_x) + "," + str(p2_y) + "," + str(p2_z) + " " + str(p3_x) + "," + str(p3_y) + "," + str(p3_z) + " " + str(c_r) + "," + str(c_g) + "," + str(c_b) + "_1_1_1"
 
 def gen_obj(obj_type):
     switcher = {
