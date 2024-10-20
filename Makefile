@@ -62,7 +62,7 @@ NAME		= miniRT
 			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 #./objs/$(shell echo $(patsubst %.c,%.o,$<) | sed 's/\//_/g')
 
-${NAME}:	MAC
+${NAME}:	LINUX
 
 LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make bonus -C ./lib/libft
