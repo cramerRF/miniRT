@@ -1,70 +1,72 @@
-SRC		= ./src/main.c \
-		./src/input_utils.c \
-		./src/gnl_utils.c \
-		./src/file_parser.c \
-		./src/menu/menu.c \
-		./src/menu/add.c \
-		./src/menu/delete.c \
-		./src/menu/edit.c \
-		./src/menu/error.c \
-		./src/menu/exit.c \
-		./src/menu/list.c \
-		./src/menu/save.c \
-		./src/menu/load.c \
-		./src/menu/help.c \
-		./src/camera/camera.c \
-		./src/light/light.c \
-		./src/light/ambient_light.c \
-		./src/objs/properties.c \
-		./src/objs/sphere.c \
-		./src/objs/plane.c \
-		./src/objs/triangle.c \
-		./src/render/init.c \
-		./src/render/add.c \
-		./src/render/edit.c \
-		./src/render/free.c \
-		./src/render/menu.c \
-		./src/render/update.c \
-		./src/render/objs/plane.c \
-		./src/render/objs/sphere.c \
-		./src/render/objs/triangle.c \
-		./src/3dmath/utils1.c \
+SRCS_PATH = src/
+INCS_PATH = inc/
+BIN_PATH = bin/
 
+SRCS		= main.c \
+		input_utils.c \
+		gnl_utils.c \
+		file_parser.c \
+		menu/menu.c \
+		menu/add.c \
+		menu/delete.c \
+		menu/edit.c \
+		menu/error.c \
+		menu/exit.c \
+		menu/list.c \
+		menu/save.c \
+		menu/load.c \
+		menu/help.c \
+		camera/camera.c \
+		light/light.c \
+		light/ambient_light.c \
+		objs/properties.c \
+		objs/sphere.c \
+		objs/plane.c \
+		objs/triangle.c \
+		render/init.c \
+		render/add.c \
+		render/edit.c \
+		render/free.c \
+		render/menu.c \
+		render/update.c \
+		render/objs/plane.c \
+		render/objs/sphere.c \
+		render/objs/triangle.c \
+		3dmath/utils1.c \
+		gnl/get_next_line_bonus.c \
+		gnl/get_next_line_utils_bonus.c \
 
-HEAD		= ./inc/miniRT.h \
-		  ./inc/structs.h
+HEAD		= inc/miniRT.h \
+		  inc/structs.h
 
-LIB		= ./lib/libft/libft.a  -lm
+LIB		= lib/libft/libft.a  -lm
 
-LIB_MAC = -framework OpenGL -framework AppKit -L. -D RT_MACOS_COMPI ./lib/minilibx_macos/libmlx.a
+LIB_MAC = -framework OpenGL -framework AppKit -L. -D RT_MACOS_COMPI lib/minilibx_macos/libmlx.a
 
 LIB_LINUX	= -std=gnu99 -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lz -D RT_LINUX_COMPI
-#
 
-OBJS_AUX	= $(SRC:.c=.o)
-OBJS		= $(SRC:.c=.o)
-#OBJS		= $(shell echo $(OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g')
-
-GNL		=	./lib/gnl/get_next_line_bonus.c\
-			./lib/gnl/get_next_line_utils_bonus.c
-
-GNL_OBJS_AUX = ${GNL:.c=.o}
-GNL_OBJS	 = ${GNL:.c=.o}
-#GNL_OBJS		= $(shell echo $(GNL_OBJS_AUX) | sed 's/\//_/g' | sed 's/\._/objs\//g')
+OBJS 		= $(SRCS:%.c=bin/%.o)
 
 CC		= cc
 
 CFLAGS		= -Wall -Wextra -Werror -g3	#-fsanitize=address 
 
+RM 				= rm -rf
+
 NAME		= miniRT
 
-.c.o:
-			${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
-#./objs/$(shell echo $(patsubst %.c,%.o,$<) | sed 's/\//_/g')
+all:		${NAME}
+
+$(BIN_PATH)%.o: $(SRCS_PATH)%.c
+			mkdir -p $(dir $@)
+			$(CC) $(CFLAGS) -c $< -o $@
 
 ${NAME}:	LINUX
 
+# LINUX:
 LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
+			echo OBJS ${OBJS}
+			echo OBJS ${GNL_OBJS}
 			make bonus -C ./lib/libft
 			make re -C ./lib/minilibx_linux
 			${CC} ${CFLAGS} -D RT_LINUX_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
@@ -74,11 +76,11 @@ MAC:		${OBJS} ${GNL_OBJS} ${HEAD}
 			make -C ./lib/minilibx_macos
 			${CC} ${CFLAGS} -D RT_MACOS_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_MAC}
 
-all:		${NAME}
 
 clean:
 			make clean -C ./lib/libft
 			${RM} ${OBJS} ${GNL_OBJS}
+			${RM} ${BIN_PATH}
 
 fclean:		clean
 			${RM} ${NAME}

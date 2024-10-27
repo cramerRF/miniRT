@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line_bonus.h"
+#include "../../inc/get_next_line_bonus.h"
 
 static void	gnl_get_lens(char *s, int *len, int *jump)
 {
