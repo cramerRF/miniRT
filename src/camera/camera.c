@@ -18,7 +18,6 @@ t_tuple    *add_camera(void)
     obj->type = OBJ_C;
     obj->key = NULL;
     obj->fixed = 0;
-    printf("Camera: ->%s<- addr_obj %p addr_content %p cam %p\n", obj->key, obj, obj->content, cam);
     return (obj);
 }
 

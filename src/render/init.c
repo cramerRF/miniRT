@@ -29,8 +29,8 @@ int     get_prop_image(t_prop_image *img)
         return (printf("Error: getting line\n"), 1);
     img->pixel_witdh = ft_atoi(line);
     free(line);
-    if (img->pixel_witdh < 600)
-        img->pixel_witdh = 600;
+    if (img->pixel_witdh < 480 || img->pixel_witdh > 4000)
+        img->pixel_witdh = 480;
     printf("Pixel_height:\n");
     line = get_next_line_nl(0, 0);
     if (!line)
@@ -39,14 +39,6 @@ int     get_prop_image(t_prop_image *img)
     free(line);
     if (img->pixel_height < 480 || img->pixel_witdh > 4000)
         img->pixel_height = 480;
-    printf("Pixel_height:\n");
-    line = get_next_line_nl(0, 0);
-    if (!line)
-        return (printf("Error: getting line\n"), 1);
-    img->pixel_height = ft_atoi(line);
-    free(line);
-    if (img->pixel_height < 600 || img->pixel_height > 4000)
-        img->pixel_height = 600;
     printf("near_plane:\n");
     line = get_next_line_nl(0, 0);
     if (!line)
