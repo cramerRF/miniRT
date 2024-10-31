@@ -5,3 +5,5 @@ lmlx_linux.a
 libmlx.a
 bin
 *.o
+libft.a
+miniRT
