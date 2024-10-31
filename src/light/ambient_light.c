@@ -9,8 +9,8 @@ t_tuple    *add_ambient_light(void)
     if (!al)
         return (NULL);
     al->color[0] = 255;
-    al->color[1] = 0;
-    al->color[2] = 0;
+    al->color[1] = 255;
+    al->color[2] = 255;
     al->ratio = 1;
     obj = malloc(sizeof(t_tuple));
     if (!obj)

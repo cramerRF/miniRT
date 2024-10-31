@@ -10,8 +10,8 @@ t_tuple    *add_light(void)
         return (NULL);
     li->center = (t_td_point) {0, 0, 0};
     li->color[0] = 255;
-    li->color[1] = 0;
-    li->color[2] = 0;
+    li->color[1] = 255;
+    li->color[2] = 255;
     li->ratio = 1;
     obj = malloc(sizeof(t_tuple));
     if (!obj)

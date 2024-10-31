@@ -89,4 +89,7 @@ fclean:		clean
 			
 re:			fclean all
 
+run:  all
+	./${NAME} ./simple.rt
+
 .PHONY:	all clean fclean re

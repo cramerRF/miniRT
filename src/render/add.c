@@ -225,9 +225,9 @@ void    calculate_parameters(t_render *rend, t_td_point para[PARA_N])
     theta = rend->cam.fov / (2.0 * M_PI);
     viewport_w = 2 * tan(theta / 2) * focal_len;
     viewport_h = viewport_w * (nType) rend->prop_img.pixel_height / (nType)rend->prop_img.pixel_witdh;
-    printf("theta %0.4f\n", theta);
-    printf("viewport_h %0.4f\n", viewport_h);
-    printf("viewport_w %0.4f\n", viewport_w);
+    /*printf("theta %0.4f\n", theta);*/
+    /*printf("viewport_h %0.4f\n", viewport_h);*/
+    /*printf("viewport_w %0.4f\n", viewport_w);*/
 
     //Axis cam
     para[RIGHT] = cross_product(rend->cam.normal, (t_td_point) {0, 0, 1});
@@ -236,32 +236,32 @@ void    calculate_parameters(t_render *rend, t_td_point para[PARA_N])
     else
         para[RIGHT] = normalize(para[RIGHT]);
     para[UP] = scalar_product(normalize(cross_product(rend->cam.normal, para[RIGHT])), -1);
-    print_td_point("NORMAL", rend->cam.normal);
-    print_td_point("RIGHT", para[RIGHT]);
-    print_td_point("UP", para[UP]);
+    /*print_td_point("NORMAL", rend->cam.normal);*/
+    /*print_td_point("RIGHT", para[RIGHT]);*/
+    /*print_td_point("UP", para[UP]);*/
 
     //Deltas    
     viewport_r = scalar_product(para[RIGHT], viewport_w);
     viewport_u = scalar_product(para[UP], viewport_h);
     para[D_R] = scalar_product(viewport_r, 1.0 / rend->prop_img.pixel_witdh);
     para[D_U] = scalar_product(viewport_u, 1.0 / rend->prop_img.pixel_height);
-    print_td_point("viewport_u", viewport_u);
-    print_td_point("viewport_r", viewport_r);
-    print_td_point("D_R", para[D_R]);
-    print_td_point("D_U", para[D_U]);
+    /*print_td_point("viewport_u", viewport_u);*/
+    /*print_td_point("viewport_r", viewport_r);*/
+    /*print_td_point("D_R", para[D_R]);*/
+    /*print_td_point("D_U", para[D_U]);*/
 
     //Upper left pixel
     para[ORIGIN] = sum_vector(rend->cam.vertex, scalar_product(rend->cam.normal, focal_len));
-    print_td_point("O_1", para[ORIGIN]);
+    /*print_td_point("O_1", para[ORIGIN]);*/
     para[ORIGIN] = sum_vector(para[ORIGIN], scalar_product(viewport_r, -1.0 / 2.0));
-    print_td_point("O_2", para[ORIGIN]);
+    /*print_td_point("O_2", para[ORIGIN]);*/
     para[ORIGIN] = sum_vector(para[ORIGIN], scalar_product(viewport_u, 1.0 / 2.0));
-    print_td_point("O_3", para[ORIGIN]);
+    /*print_td_point("O_3", para[ORIGIN]);*/
     para[ORIGIN] = sum_vector(para[ORIGIN], scalar_product(sum_vector(para[D_R], para[D_U]), 1 / 2));
 
-    print_td_point("ORIGINul", para[ORIGIN]);
-    print_td_point("ORIGINur", sum_vector(para[ORIGIN], scalar_product(para[D_R], rend->prop_img.pixel_witdh)));
-    print_td_point("ORIGINdl", sum_vector(para[ORIGIN], scalar_product(para[D_U], - (nType) rend->prop_img.pixel_height)));
+    /*print_td_point("ORIGINul", para[ORIGIN]);*/
+    /*print_td_point("ORIGINur", sum_vector(para[ORIGIN], scalar_product(para[D_R], rend->prop_img.pixel_witdh)));*/
+    /*print_td_point("ORIGINdl", sum_vector(para[ORIGIN], scalar_product(para[D_U], - (nType) rend->prop_img.pixel_height)));*/
     print_td_point("ORIGINdr", para[ORIGIN]);
 }
 
@@ -449,7 +449,12 @@ void    *rendered_task(void *arg)
         ray = (((t_ray *) thread->rays) + i - thread->start);
         //print_vector("ray", ray->origin, sum_vector(ray->origin, ray->direction));
         if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj, rend))
-            rt_put_pixel(rend, i, get_props_from_tuple(&good_obj)->color[0] << 16 | get_props_from_tuple(&good_obj)->color[1] << 8 | get_props_from_tuple(&good_obj)->color[2]);
+        {
+            t_obj_properties  *props;
+            props = get_props_from_tuple(&good_obj);
+            rt_put_pixel(rend, i, props->color[0] << 16 | props->color[1] << 8 | props->color[2]);
+
+        }
         else
             rt_put_pixel(rend, i, 0x000000);
         //Color pixel0x00FF00
