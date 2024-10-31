@@ -4,3 +4,4 @@ dot_o
 lmlx_linux.a
 libmlx.a
 bin
+*.o
