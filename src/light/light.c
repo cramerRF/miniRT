@@ -113,9 +113,9 @@ t_tuple    *read_light(char *line)
     if (rt_is_upper(split[0]) && printf("Fixed object\n"))
         obj->fixed = 1;
     obj->key = ft_strdup(split[1]);
-    if (line_to_point(split[3], &((t_light *) obj->content)->center))
+    if (line_to_point(split[2], &((t_light *) obj->content)->center))
         return (printf("Error: center parsing error\n"), ft_free_split(split), free_light(obj), NULL);
-    if (line_to_color(split[2], ((t_light *) obj->content)->color))
+    if (line_to_color(split[3], ((t_light *) obj->content)->color))
         return (printf("Error: color parsing error\n"), ft_free_split(split), free_light(obj), NULL);
     if (atof(split[4]) < 0 || atof(split[4]) > 1)
         return (printf("Error: ratio parsing error\n"), ft_free_split(split), free_light(obj), NULL);
