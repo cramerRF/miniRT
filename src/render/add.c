@@ -1,5 +1,7 @@
 #include "../../inc/miniRT.h"
 
+t_obj_properties *get_props_from_tuple(t_tuple *tuple);
+
 void index_to_pixel(int *x, int *y, int j, t_render *rend)
 {
     *x = j % rend->prop_img.pixel_witdh;
@@ -331,13 +333,67 @@ void compute_rays(t_render *rend)
     }
 }
 
-int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj)
+t_td_point  get_normal(t_tuple *obj, t_td_point *point, t_ray *ray)
 {
+  if (obj->type == OBJ_PLA)
+    return normal_plane(obj->content, ray, point);
+  if (obj->type == OBJ_SPH)
+    return normal_sphere(obj->content, ray, point);
+  if (obj->type == OBJ_TRI)
+    return normal_triangle(obj->content, ray, point);
+  return ((t_td_point){0,0,0});
+}
+
+
+int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_list *light_list)
+{
+    t_ambient_light *ambient_light = NULL;
+    t_light *point_light = NULL;
+
+    /*t_td_point normal = calculate_surface_normal(hit_obj, *hit_point);*/
     (void) objs;
-    (void) ray;
-    (void) hit_obj;
-    (void) hit_point;
-    return 0;
+    t_td_point normal = get_normal(hit_obj, hit_point, ray);
+     // Assume this function exists
+    t_obj_properties  *props;
+
+    props = get_props_from_tuple(hit_obj);
+    
+    cType final_color = {0, 0, 0};
+
+    // Iterate over all lights and accumulate lighting effects
+    if (light_list) {
+        t_list *current = light_list;
+        while (current) {
+            t_tuple *light_tuple = (t_tuple *)current->content;
+
+            if (light_tuple->type == OBJ_AL) {
+                ambient_light = (t_ambient_light *)light_tuple->content;
+
+                // Ambient component
+                for (int i = 0; i < 3; ++i) {
+                    final_color[i] += (props->color[i]) * (ambient_light->color[i] / 255.0) * (ambient_light->ratio);
+                }
+            }
+
+            if (light_tuple->type == OBJ_LI) {
+                point_light = (t_light *)light_tuple->content;
+
+                // Diffuse component calculation
+                t_td_point light_dir = normalize(sum_vector(point_light->center, scalar_product(*hit_point, -1)));
+                nType raio = fmax(dot_product(normal, light_dir), 0.0);
+                // TODO check for shadows other objs inters
+
+                for (int i = 0; i < 3; ++i) {
+                    final_color[i] += props->color[i] * raio * (point_light->color[i] / 255.0) * (point_light->ratio);
+                }
+            }
+
+            current = current->next;
+        }
+    }
+
+    // Composing integer return color value
+    return (final_color[0] << 16) | (final_color[1] << 8) | final_color[2];
 }
 
 void    set_up_inter_ray(int 	(*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_point **arr))
@@ -450,9 +506,16 @@ void    *rendered_task(void *arg)
         //print_vector("ray", ray->origin, sum_vector(ray->origin, ray->direction));
         if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj, rend))
         {
+            //REMOVE down
             t_obj_properties  *props;
+
             props = get_props_from_tuple(&good_obj);
             rt_put_pixel(rend, i, props->color[0] << 16 | props->color[1] << 8 | props->color[2]);
+            //REMOVE UP
+
+            
+            int color = get_hit_light(rt->objs_render, ray, &good_hit, &good_obj, rt->lights);
+            rt_put_pixel(rend, i, color);
 
         }
         else
@@ -492,7 +555,7 @@ void    *render_task(void *arg)
     i = -1;
     while (++i < rend->prop_perf.n_threads)
     {
-        printf("thread %d, start %d, end %d, rays %p\n", rend->threads[i].id, rend->threads[i].start, rend->threads[i].end, rend->threads[i].rays);
+        printf("ENDING thread %d, start %d, end %d, rays %p\n", rend->threads[i].id, rend->threads[i].start, rend->threads[i].end, rend->threads[i].rays);
         pthread_join(rend->threads[i].thread, NULL);
     }
     pthread_mutex_lock(&rt->mutex);

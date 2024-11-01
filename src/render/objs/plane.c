@@ -23,5 +23,9 @@ t_td_point  normal_plane(void *obj, t_ray *ray, t_td_point *point)
     (void) obj;
     (void) ray;
     (void) point;
-    return ((t_td_point){0, 0, 0});
+    t_plane *p = (t_plane *) obj;
+    t_td_point  normal = p->normal;
+    //TODO check ray direction
+    normal = scalar_product(normal, -1);
+    return (normal);
 }

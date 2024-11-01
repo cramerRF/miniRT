@@ -11,8 +11,8 @@ RM	= rm -f
 .c.o:
 		${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
-${NAME}:	${OBJS}
-		${AR} ${NAME} ${OBJS}
+${NAME}:	${OBJS} ${OBJSLST}
+		${AR} ${NAME} ${OBJS} ${OBJSLST}
 
 bonus:		${OBJS} ${OBJSLST}
 		${AR} ${NAME} ${OBJS} ${OBJSLST}

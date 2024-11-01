@@ -68,7 +68,7 @@ LINUX:		${OBJS} ${GNL_OBJS} ${HEAD}
 			echo OBJS ${OBJS}
 			echo OBJS ${GNL_OBJS}
 			make bonus -C ./lib/libft
-			make re -C ./lib/minilibx_linux
+			make -C ./lib/minilibx_linux
 			${CC} ${CFLAGS} -D RT_LINUX_COMPI -o ${NAME} ${OBJS} ${GNL_OBJS} ${LIB} ${LIB_LINUX}
 
 MAC:		${OBJS} ${GNL_OBJS} ${HEAD}

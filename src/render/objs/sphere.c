@@ -44,5 +44,13 @@ t_td_point  normal_sphere(void *obj, t_ray *ray, t_td_point *point)
     (void) obj;
     (void) ray;
     (void) point;
-    return ((t_td_point){0, 0, 0});
+
+    t_td_point  normal;
+    t_sphere  *sp;
+
+    sp = (t_sphere *) obj;
+    normal = normalize(sum_vector(*point, scalar_product(sp->center, -1)));
+    //TO DO Check if ray came from the inside
+    /*normal = scalar_product(normal, -1);*/
+    return (normal);
 }

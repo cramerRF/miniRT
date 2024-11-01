@@ -35,8 +35,15 @@ int         inter_triangle(void *obj, t_ray *ray, t_td_point **arr)
 
 t_td_point  normal_triangle(void *obj, t_ray *ray, t_td_point *point)
 {
-    (void) obj;
     (void) ray;
     (void) point;
-    return ((t_td_point){0, 0, 0});
+    t_td_triangle *t = (t_td_triangle *) obj;
+    t_td_point normal =  {
+    t->a.y * t->b.z - t->a.z * t->b.y, 
+    t->a.z * t->b.x - t->a.x * t->b.z, 
+    t->a.x * t->b.y - t->a.y * t->b.x 
+    };
+    //TODO check ray direction
+    normal = scalar_product(normal, -1);
+    return normal;
 }
