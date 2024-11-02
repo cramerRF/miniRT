@@ -1,6 +1,7 @@
 #include "../../inc/miniRT.h"
 
 t_obj_properties *get_props_from_tuple(t_tuple *tuple);
+int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_render *render, char planes);
 
 void index_to_pixel(int *x, int *y, int j, t_render *rend)
 {
@@ -345,7 +346,7 @@ t_td_point  get_normal(t_tuple *obj, t_td_point *point, t_ray *ray)
 }
 
 
-int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_list *light_list)
+int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_list *light_list, t_render *render)
 {
     t_ambient_light *ambient_light = NULL;
     t_light *point_light = NULL;
@@ -358,7 +359,8 @@ int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *
 
     props = get_props_from_tuple(hit_obj);
     
-    cType final_color = {0, 0, 0};
+    unsigned final_color[3] = {0, 0, 0};
+    cType color = {0, 0, 0};
 
     // Iterate over all lights and accumulate lighting effects
     if (light_list) {
@@ -380,9 +382,27 @@ int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *
 
                 // Diffuse component calculation
                 t_td_point light_dir = normalize(sum_vector(point_light->center, scalar_product(*hit_point, -1)));
-                nType raio = fmax(dot_product(normal, light_dir), 0.0);
+                nType raio = fabs(dot_product(normal, light_dir));
+                t_ray aux;
+                t_tuple aux2;
+                t_td_point  aux3;
+                aux.origin = *hit_point;
+                aux.direction = scalar_product(light_dir, 1);
                 // TODO check for shadows other objs inters
+                if (get_hit_ray(objs, &aux, &aux3, &aux2, render, 0))
+                {
+                  raio = 0;
+                  //free TODO
 
+                }
+                if (0  && aux2.type == OBJ_SPH && raio == 0)
+                {
+                  printf("AA\n");
+                  print_td_point("hit_point", *hit_point);
+                  print_td_point("aux3", aux3);
+                }
+                /*if (check_for_shadows(light_dir, point_light, hit_point, hit_obj))*/
+                  /*raio = 0;*/
                 for (int i = 0; i < 3; ++i) {
                     final_color[i] += props->color[i] * raio * (point_light->color[i] / 255.0) * (point_light->ratio);
                 }
@@ -393,7 +413,9 @@ int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *
     }
 
     // Composing integer return color value
-    return (final_color[0] << 16) | (final_color[1] << 8) | final_color[2];
+    for (int i = 0; i < 3; ++i)
+        color[i] = (final_color[i] > 255) ? 255 : final_color[i];
+    return (color[0] << 16) | (color[1] << 8) | color[2];
 }
 
 void    set_up_inter_ray(int 	(*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_point **arr))
@@ -410,7 +432,7 @@ void    set_up_inter_ray(int 	(*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_po
     inter_ray[OBJ_C] = NULL;
 }
 
-int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_render *render)
+int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hit_obj, t_render *render, char planes)
 {
 	static int 	    (*inter_ray[OBJ_N])(void *obj, t_ray *ray, t_td_point **arr);
     t_list          *tmp;
@@ -440,11 +462,13 @@ int     get_hit_ray(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *hi
             if (ac_distance > min)
                 continue ;
             //Check sort distance
-            if (ac_distance < render->prop_img.near_plane)
+            if (planes && ac_distance < render->prop_img.near_plane)
                 continue ;
             //Check big distance
-            if (ac_distance > render->prop_img.far_plane)
+            if (planes && ac_distance > render->prop_img.far_plane)
                 continue ;
+            if (!planes && module(sum_vector(arr[n], scalar_product(ray->origin, -1))) < 0.000001 )
+              continue ;
             min = ac_distance;
             *hit_point = arr[n];
             *hit_obj = *((t_tuple *) tmp->content);
@@ -504,17 +528,17 @@ void    *rendered_task(void *arg)
     {
         ray = (((t_ray *) thread->rays) + i - thread->start);
         //print_vector("ray", ray->origin, sum_vector(ray->origin, ray->direction));
-        if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj, rend))
+        if (get_hit_ray(rt->objs_render, ray, &good_hit, &good_obj, rend, 1))
         {
             //REMOVE down
-            t_obj_properties  *props;
+            /*t_obj_properties  *props;*/
 
-            props = get_props_from_tuple(&good_obj);
-            rt_put_pixel(rend, i, props->color[0] << 16 | props->color[1] << 8 | props->color[2]);
+            /*props = get_props_from_tuple(&good_obj);*/
+            /*rt_put_pixel(rend, i, props->color[0] << 16 | props->color[1] << 8 | props->color[2]);*/
             //REMOVE UP
 
             
-            int color = get_hit_light(rt->objs_render, ray, &good_hit, &good_obj, rt->lights);
+            int color = get_hit_light(rt->objs_render, ray, &good_hit, &good_obj, rt->lights, rend);
             rt_put_pixel(rend, i, color);
 
         }
