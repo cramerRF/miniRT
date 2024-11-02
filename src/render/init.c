@@ -4,11 +4,11 @@
 void    default_prop_image(t_prop_image *img)
 {
     img->far_plane = 100;
-    img->near_plane = 1;
-    img->pixel_height = 600;
-    img->pixel_witdh = 600;
-    img->ratio[0] = 1;
-    img->ratio[1] = 1;
+    img->near_plane = 0.1;
+    img->pixel_height = 720;
+    img->pixel_witdh = 1080;
+    img->ratio[0] = 16;
+    img->ratio[1] = 9;
 }
 
 int     get_prop_image(t_prop_image *img)
@@ -181,9 +181,9 @@ int    render_get_options(t_rt *rt, t_render **render)
     (*render)->name = line;
     if (!obj)
         return (printf("Camera nott found\n"), free((*render)->name), free(*render), 1);
-    printf("AAAA\n");
+    /*printf("AAAA\n");*/
     ft_memmove(&((*render)->cam), obj->content, sizeof(t_camera));
-    printf("BBBB\n");
+    /*printf("BBBB\n");*/
     if (get_prop_image(&(*render)->prop_img))
         return (printf("Error: prop_image\n"), free((*render)->name), free(*render), 1);
     if (get_prop_performance(&(*render)->prop_perf))

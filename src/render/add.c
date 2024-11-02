@@ -414,7 +414,7 @@ int     get_hit_light(t_list *objs, t_ray *ray, t_td_point *hit_point, t_tuple *
 
     // Composing integer return color value
     for (int i = 0; i < 3; ++i)
-        color[i] = (final_color[i] > 255) ? 255 : final_color[i];
+        color[i] = (final_color[i] > props->color[i]) ?  props->color[i]: final_color[i];
     return (color[0] << 16) | (color[1] << 8) | color[2];
 }
 
